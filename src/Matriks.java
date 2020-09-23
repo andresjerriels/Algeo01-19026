@@ -32,9 +32,13 @@ public class Matriks {
         return this.NKolEff - 1;
     }
 
-
     public void BacaMatriks() {
         Scanner scan = new Scanner(System.in);
+        System.out.println("Masukkan jumlah baris matriks: ");
+        int NB = scan.nextInt();
+        System.out.println("Masukkan jumlah kolom matriks: ");
+        int NK = scan.nextInt();
+        MakeEmpty(NB, NK);
         for (int i=0;i<NBrsEff;i++){
             for (int j=0;j<NKolEff;j++){
                 this.Elmt[i][j] = scan.nextDouble();
@@ -82,13 +86,48 @@ public class Matriks {
 
     public void TukarBrs(int IdxBrs1, int IdxBrs2){
         double tmp;
-        for (int j = 0; j <= getLastIdxKol();j++){
+        for (int j = this.IdxKolMin; j <= getLastIdxKol();j++){
             tmp = this.Elmt[IdxBrs1][j];
             this.Elmt[IdxBrs1][j] = this.Elmt[IdxBrs2][j];
             this.Elmt[IdxBrs2][j] = tmp;
         }
     }
 
+    // Untuk Matriks Invers
+    public void InversMatriks(){
 
+    }
+
+
+    // UNTUK INTERPOLASI
+    public void MakeMatriksInterpolasi(int NBrs) {
+        this.NBrsEff = NBrs;
+        this.NKolEff = NBrs + 1;
+
+        for (int i=this.IdxBrsMin;i<=getLastIdxBrs();i++){
+            double x = this.Elmt[i][this.IdxBrsMin];
+            double y = this.Elmt[i][1];
+            for (int j=this.IdxKolMin;j<=getLastIdxKol();j++){
+                if (j != getLastIdxKol()){
+                    this.Elmt[i][j] = Math.pow(x, j);
+                } else {
+                    this.Elmt[i][j] = y;
+                }
+            }
+        }
+    }
+
+    public void BacaMatriksInterpolasi() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Masukkan jumlah baris: ");
+        int NB = scan.nextInt();
+        this.MakeEmpty(NB, 2);
+        for (int i=0;i<NBrsEff;i++){
+            for (int j=0;j<NKolEff;j++){
+                this.Elmt[i][j] = scan.nextDouble();
+            }
+        }
+        this.MakeMatriksInterpolasi(NB);
+    }
 
 }
