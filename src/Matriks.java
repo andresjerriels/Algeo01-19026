@@ -175,6 +175,26 @@ public class Matriks {
 				
 			}}
 		}
+    
+    //EliminasiGaussJordan
+    public void EliminasiGaussJordan() {
+		
+    	EliminasiGauss();
+		for (int i=this.NBrsEff-1;i>0;i--) {
+			for (int j=0;j<=this.NKolEff-1;j++) {
+				if (this.Elmt[i][j]==1) {
+					//0in nilai di atas 1 utama
+					for (int a = i-1; a>=0; a--) {
+						double x = -(this.Elmt[a][j]/this.Elmt[i][j]);
+						for (int b = 0; b < this.NKolEff; b++) {
+							this.Elmt[a][b] += this.Elmt[i][b] * x;
+						}
+					}
+				}
+			}
+		}
+		
+	}
 
     // Untuk Matriks Invers
     public void InversMatriks(){
