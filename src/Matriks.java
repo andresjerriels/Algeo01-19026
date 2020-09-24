@@ -44,7 +44,6 @@ public class Matriks {
                 this.Elmt[i][j] = scan.nextDouble();
             }
         }
-        scan.close();
     }
 
     public void TulisMatriks() {
@@ -129,7 +128,6 @@ public class Matriks {
             }
         }
         this.MakeMatriksInterpolasi(NB);
-        scan.close();
     }
 
     public double DeterminanDenganKofaktor() {
