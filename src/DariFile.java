@@ -14,6 +14,7 @@ public class DariFile {
         System.out.println("Nama file: ");
         this.namaFile = scan.nextLine();
         this.file = new File(this.namaFile);
+        scan.close();
     }
 
     int JmlElmtMatriks() throws IOException {

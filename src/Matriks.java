@@ -18,7 +18,7 @@ public class Matriks {
         this.NKolEff = NK;
 
         for (int i=0;i<NBrsEff;i++) {
-            for (int j = 0; i < NKolEff; j++) {
+            for (int j = 0; j < NKolEff; j++) {
                 this.Elmt[i][j] = 0.0;
             }
         }
@@ -131,4 +131,35 @@ public class Matriks {
         this.MakeMatriksInterpolasi(NB);
         scan.close();
     }
+
+    public double DeterminanDenganKofaktor() {
+		int n = this.NBrsEff;
+		if (n<=0) {
+			return 0;
+		} else if (n==1){
+			return this.Elmt[0][0];
+		} else if (n==2){
+			return (this.Elmt[0][0] * this.Elmt[1][1]) - (this.Elmt[1][0]*this.Elmt[0][1]);
+		} else{
+			Matriks minor = new Matriks((n-1),(n-1));	//inisialisasi matriks minor
+			int i, aj, bj, k;	//indeks yang akan digunakan
+			int sign = 1;
+			double det = 0;
+			for(k=0; k<n ; k++){
+				for (i=1 ; i<n ; i++){
+					bj = 0;
+					for (aj=0; aj<n ; aj++){
+						if (aj!=k){
+							minor.Elmt[i-1][bj] = this.Elmt[i][aj];
+							++bj;
+						}
+					}
+				}
+				det = det + (sign*this.Elmt[0][k]*minor.DeterminanDenganKofaktor());
+				sign = -1*sign;
+			}
+			return det;
+		}
+    }
+
 }
