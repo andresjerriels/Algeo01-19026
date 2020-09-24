@@ -17,8 +17,8 @@ public class Matriks {
         this.NBrsEff = NB;
         this.NKolEff = NK;
 
-        for (int i=0;i<NBrsEff;i++) {
-            for (int j = 0; j < NKolEff; j++) {
+        for (int i = this.IdxBrsMin; i <= this.getLastIdxBrs();i++) {
+            for (int j = this.IdxKolMin; j <= this.getLastIdxKol(); j++) {
                 this.Elmt[i][j] = 0.0;
             }
         }
@@ -39,16 +39,16 @@ public class Matriks {
         System.out.println("Masukkan jumlah kolom matriks: ");
         int NK = scan.nextInt();
         MakeEmpty(NB, NK);
-        for (int i=0;i<NBrsEff;i++){
-            for (int j=0;j<NKolEff;j++){
+        for (int i = this.IdxBrsMin; i <= this.getLastIdxBrs(); i++){
+            for (int j = this.IdxKolMin; j <= this.getLastIdxKol(); j++){
                 this.Elmt[i][j] = scan.nextDouble();
             }
         }
     }
 
     public void TulisMatriks() {
-        for (int i = this.IdxBrsMin; i < this.NBrsEff; i++) {
-            for (int j = this.IdxKolMin; j < this.NKolEff; j++) {
+        for (int i = this.IdxBrsMin; i <= this.getLastIdxBrs(); i++) {
+            for (int j = this.IdxKolMin; j <= this.getLastIdxKol(); j++) {
                 DecimalFormat df = new DecimalFormat("#.##");
 
                 if ((i != getLastIdxBrs()) && (j == getLastIdxKol())) {
@@ -64,7 +64,7 @@ public class Matriks {
 
     public boolean IsBrsAllZero(int Idx) {
         int j = this.IdxKolMin;
-        while (j <= this.NKolEff){
+        while (j <= this.getLastIdxKol()){
             if (this.Elmt[Idx][j] != 0){
                 return false;
             }
@@ -74,8 +74,8 @@ public class Matriks {
     }
 
     public boolean IsKolAllZero(int Idx) {
-        int i = 0;
-        while (i <= this.NBrsEff){
+        int i = this.IdxBrsMin;
+        while (i <= this.getLastIdxBrs()){
             if (this.Elmt[i][Idx] != 0){
                 return false;
             }
@@ -86,7 +86,7 @@ public class Matriks {
 
     public void TukarBrs(int IdxBrs1, int IdxBrs2){
         double tmp;
-        for (int j = this.IdxKolMin; j <= getLastIdxKol();j++){
+        for (int j = this.IdxKolMin; j <= this.getLastIdxKol();j++){
             tmp = this.Elmt[IdxBrs1][j];
             this.Elmt[IdxBrs1][j] = this.Elmt[IdxBrs2][j];
             this.Elmt[IdxBrs2][j] = tmp;
@@ -104,10 +104,10 @@ public class Matriks {
         this.NBrsEff = NBrs;
         this.NKolEff = NBrs + 1;
 
-        for (int i=this.IdxBrsMin;i<=getLastIdxBrs();i++){
+        for (int i = this.IdxBrsMin; i <= this.getLastIdxBrs(); i++){
             double x = this.Elmt[i][this.IdxBrsMin];
             double y = this.Elmt[i][1];
-            for (int j=this.IdxKolMin;j<=getLastIdxKol();j++){
+            for (int j=this.IdxKolMin;j<=this.getLastIdxKol();j++){
                 if (j != getLastIdxKol()){
                     this.Elmt[i][j] = Math.pow(x, j);
                 } else {
@@ -122,8 +122,8 @@ public class Matriks {
         System.out.println("Masukkan jumlah baris: ");
         int NB = scan.nextInt();
         this.MakeEmpty(NB, 2);
-        for (int i=0;i<NBrsEff;i++){
-            for (int j=0;j<NKolEff;j++){
+        for (int i=this.IdxBrsMin; i <= this.getLastIdxBrs(); i++){
+            for (int j=this.IdxKolMin; j <= this.getLastIdxKol(); j++){
                 this.Elmt[i][j] = scan.nextDouble();
             }
         }
