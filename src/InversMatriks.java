@@ -70,7 +70,7 @@ public class InversMatriks {
         return eselon;
     }
 
-    public void hasilInvers() {
+    public void bentukMatriksInvers() {
         int KolAwal = this.matriks.NKolEff;
         this.matriks.NKolEff += this.matriks.NBrsEff;
 
@@ -84,8 +84,10 @@ public class InversMatriks {
             }
             KolAwal++;
         }
-        this.matriks = this.EselonBarisTereduksi();
+        this.matriks.EliminasiGaussJordan();
+    }
 
+    public void hasilInvers() {
         Matriks tmp = this.matriks;
 
         for (int i = 0; i <= this.matriks.getLastIdxBrs(); i++){
@@ -99,5 +101,23 @@ public class InversMatriks {
         this.matriks.NKolEff -= this.matriks.NBrsEff;
     }
 
+    public boolean IsInversible() {
+        int KolAwal = this.matriks.NKolEff / 2;
+        int x = 0, i = 0, j = 0;
+        boolean inversible = true;
+        while((i <= this.matriks.getLastIdxBrs()) && inversible){
+            while((j < KolAwal) && inversible){
+                if (j == x){
+                    inversible = this.matriks.Elmt[i][j] == 1;
+                } else {
+                    inversible = this.matriks.Elmt[i][j] == 0;
+                }
+                j++;
+            }
+            i++;
+            x++;
+        }
+        return inversible;
+    }
 
 }

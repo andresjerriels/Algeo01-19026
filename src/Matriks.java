@@ -200,9 +200,20 @@ public class Matriks {
 		
 	}
 
-    // Untuk Matriks Invers
-    public void InversMatriks(){
+    // Untuk Perkalian 2 Matriks
+    public Matriks KalidenganMatriks(Matriks M){
+        Matriks Mnew = new Matriks(this.NBrsEff, M.NKolEff);
 
+        for (int i = 0; i <= Mnew.getLastIdxBrs(); i++){
+            for (int j = 0; j <= Mnew.getLastIdxKol(); j++){
+                double tmp = 0;
+                for (int x = 0; x <= this.getLastIdxKol(); x++){
+                    tmp += this.Elmt[i][x] * M.Elmt[x][j];
+                }
+                Mnew.Elmt[i][j] = tmp;
+            }
+        }
+        return Mnew;
     }
 
 
