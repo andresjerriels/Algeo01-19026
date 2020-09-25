@@ -68,6 +68,7 @@ public class Matriks {
             }
         }
     }
+    
 
     //=====================BASIC OPERATIONS=======================
     // IsBrsAllZero
@@ -107,6 +108,7 @@ public class Matriks {
 		return allZero;
 		
 	}
+    
     
     //GetElmtDiagonal
     double GetElmtDiagonal(int i) {
@@ -248,6 +250,101 @@ public class Matriks {
     }
     
     //=====================MAIN OPERATIONS=======================
+    
+    //SPL Gauss
+    public void SPLGauss() {
+    	DecimalFormat df = new DecimalFormat("#.##");
+    	int brsNotZero = 0;
+    	int cr = this.getLastIdxBrs();
+    	boolean hasSolution = true;
+    	
+    	//PREPARATION
+    	EliminasiGauss();
+    	while (hasSolution && cr>=0) {
+    		int cc = 0;
+    		boolean rowAllZero = true;
+    	    		
+    		for (int j=0; j<=this.getLastIdxKol()-1;j++) {
+    			if (this.Elmt[cr][j]!=0) {
+    				rowAllZero = false;
+    			}
+    		}
+    		
+    		if (rowAllZero) {
+    			if (this.Elmt[cr][this.getLastIdxKol()]!=0) {
+    				hasSolution = false;
+    			} 
+    		} else {
+				brsNotZero++;
+			}
+    		
+    		cr--;
+    	}
+    	
+    	//KASUS 1: HAS NO SOLUTION
+    	if (!hasSolution) {
+    		System.out.println("SPL ini tidak memiliki solusi.");
+    	} else {
+    		//KASUS 2: INFINITELY MANY SOLUTIONS
+    		if (brsNotZero<this.NKolEff-1) {
+    			System.out.println("Oke ini nanti dulu masih bingung, tapi punya solusi banyak");
+    		} 
+    		//KASUS 3: UNIQUE SOLUTION
+    		else {
+    			System.out.println("SPL ini memiliki solusi unik, yaitu: masih bingung nanti dulu");
+    		}
+    	}
+    }
+    
+    //SPL Gauss Jordan
+    public void SPLGaussJordan() {
+    	DecimalFormat df = new DecimalFormat("#.##");
+    	int brsNotZero = 0;
+    	int cr = this.getLastIdxBrs();
+    	boolean hasSolution = true;
+    	
+    	//PREPARATION
+    	EliminasiGaussJordan();
+    	while (hasSolution && cr>=0) {
+    		int cc = 0;
+    		boolean rowAllZero = true;
+    	    		
+    		for (int j=0; j<=this.getLastIdxKol()-1;j++) {
+    			if (this.Elmt[cr][j]!=0) {
+    				rowAllZero = false;
+    			}
+    		}
+    		
+    		if (rowAllZero) {
+    			if (this.Elmt[cr][this.getLastIdxKol()]!=0) {
+    				hasSolution = false;
+    			} 
+    		} else {
+				brsNotZero++;
+			}
+    		
+    		cr--;
+    	}
+    	
+    	//KASUS 1: HAS NO SOLUTION
+    	if (!hasSolution) {
+    		System.out.println("SPL ini tidak memiliki solusi.");
+    	} else {
+    		//KASUS 2: INFINITELY MANY SOLUTIONS
+    		if (brsNotZero<this.NKolEff-1) {
+    			System.out.println("Oke ini nanti dulu masih bingung, tapi punya solusi banyak");
+    		} 
+    		//KASUS 3: UNIQUE SOLUTION
+    		else {
+    			System.out.println("SPL ini memiliki solusi unik, yaitu:");
+    			for (int i=0; i<=this.getLastIdxBrs();i++) {
+    				System.out.print("x"+(i+1)+" = "+ df.format(this.Elmt[i][this.getLastIdxKol()])+"\n");
+    			}
+    		}
+    	}
+    	
+    	
+    }
     
     //Determinan OBE
     public float DeterminanOBE() {
