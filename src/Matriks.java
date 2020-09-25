@@ -172,9 +172,9 @@ public class Matriks {
 				
 				cc++;
 				cr++;
-				
-			}}
+			}	
 		}
+	}
     
     //EliminasiGaussJordan
     public void EliminasiGaussJordan() {
