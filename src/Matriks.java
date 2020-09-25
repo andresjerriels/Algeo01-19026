@@ -356,7 +356,12 @@ public class Matriks {
     	
     	
     }
-    
+
+	//SPL CRAMER
+	public void SPLCramer(){
+		
+	}
+
     //Determinan OBE
     public float DeterminanOBE() {
 		int tukarBaris = 0;
