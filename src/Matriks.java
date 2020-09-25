@@ -161,6 +161,7 @@ public class Matriks {
 				for(int i = cc; i < this.NKolEff; i++) {
 					this.Elmt[cr][i] /= divider;
 				}
+				cleanMatriks(this, 1e-9);
 				
 				//0in nilai di bawah 1 utama currentP
 				for (int i = cr + 1; i < this.NBrsEff; i++) {
@@ -169,6 +170,7 @@ public class Matriks {
 						this.Elmt[i][j] += this.Elmt[cr][j] * x;
 					}
 				}
+				cleanMatriks(this, 1e-9);
 				
 				cc++;
 				cr++;
@@ -231,6 +233,18 @@ public class Matriks {
             }
         }
         this.MakeMatriksInterpolasi(NB);
+    }
+    
+    //CleanMatrix
+    void cleanMatriks(Matriks M, double tolerance) {
+
+        for (int i = 0; i <= M.getLastIdxBrs(); i++){
+            for(int j = 0; j <= M.getLastIdxKol(); j++){
+                if (Math.abs(M.Elmt[i][j]) < tolerance){
+                    M.Elmt[i][j] = 0;
+                }
+            }
+        }
     }
     
     //=====================MAIN OPERATIONS=======================
