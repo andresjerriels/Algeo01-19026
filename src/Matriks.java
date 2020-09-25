@@ -302,7 +302,18 @@ public class Matriks {
     		} 
     		//KASUS 3: UNIQUE SOLUTION
     		else {
-    			System.out.println("SPL ini memiliki solusi unik, yaitu: masih bingung nanti dulu");
+    			System.out.println("SPL ini memiliki solusi unik, yaitu:");
+    	        double[] solution = new double[this.NBrsEff];
+    	        for (int i = this.getLastIdxBrs(); i >= 0;i--) {
+    	            double sum = 0.0;
+    	            for (int j = i + 1; j < this.getLastIdxKol(); j++) 
+    	                sum += this.Elmt[i][j] * solution[j];
+    	            solution[i] = (this.Elmt[i][this.getLastIdxKol()] - sum);
+    	        }     
+    	        for (int i=0; i<=this.getLastIdxBrs();i++) {
+    				System.out.print("x"+(i+1)+" = "+ df.format(solution[i])+"\n");
+    			}
+    	        
     		}
     	}
     }

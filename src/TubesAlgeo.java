@@ -51,6 +51,12 @@ public class TubesAlgeo {
     }
 
     public static void main(String [] args) {
-
+    	Matriks A = new Matriks(3,4);
+    	A.BacaMatriks();
+    	
+    	A.EliminasiGauss();
+    	A.TulisMatriks();
+    	
+    	A.SPLGauss();
     }
 }
