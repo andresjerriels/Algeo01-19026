@@ -124,7 +124,17 @@ public class Matriks {
             this.Elmt[IdxBrs2][j] = tmp;
         }
     }
-    
+
+	//TukarKolCramer
+	public void TukarKolCramer(int IdxKol1, int IdxKol2, Matriks mx){
+		double tmp;
+		for (int i = this.IdxBrsMin; i <= this.getLastIdxBrs();i++){
+            tmp = mx.Elmt[i][IdxKol1];
+            mx.Elmt[i][IdxKol1] = this.Elmt[i][IdxKol2];
+            this.Elmt[i][IdxKol2] = tmp;
+        }
+	}
+	
   //EliminasiGauss
     public void EliminasiGauss() {
 		int cr = 0;
@@ -359,7 +369,42 @@ public class Matriks {
 
 	//SPL CRAMER
 	public void SPLCramer(){
-		
+		DecimalFormat df = new DecimalFormat("#.##");
+		int n = this.NBrsEff;
+		Matriks utama = new Matriks(n, n);
+		for(int i=0; i<n; i++){
+			for(int j=0; j<n; j++){
+				utama.Elmt[i][j] = this.Elmt[i][j];
+			}
+		}
+		double detUtama = utama.DeterminanDenganKofaktor();
+		double[] detMinor = new double[n];
+		for(int i=0; i<n; i++){
+			this.TukarKolCramer(i, this.getLastIdxKol(), utama);
+			detMinor[i] = utama.DeterminanDenganKofaktor();
+			this.TukarKolCramer(i, this.getLastIdxKol(), utama);
+		}
+		if(detUtama==0){
+			boolean isAllDetZero = true;
+			int i=0;
+			while(i<n && isAllDetZero){
+				if(detMinor[i]!=0){
+					isAllDetZero = false;
+				}else{
+					i+=1;
+				}
+			}
+			if(isAllDetZero){
+				System.out.println("Solusi SPL tidak dapat dicari dengan metode cramer, karena SPL ini memiliki banyak solusi.");
+			} else{
+				System.out.println("SPL ini tidak memiliki solusi.");
+			}
+		} else{
+			System.out.println("SPL ini memiliki solusi unik, yaitu:");
+			for (int i=0; i<n;i++) {
+				System.out.print("x"+(i+1)+" = "+ df.format(detMinor[i]/detUtama)+"\n");
+			}
+		}
 	}
 
     //Determinan OBE
