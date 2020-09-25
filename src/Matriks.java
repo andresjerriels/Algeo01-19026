@@ -208,7 +208,7 @@ public class Matriks {
             for (int j = 0; j <= Mnew.getLastIdxKol(); j++){
                 double tmp = 0;
                 for (int x = 0; x <= this.getLastIdxKol(); x++){
-                    tmp += this.Elmt[i][x] * M.Elmt[x][j];
+                    tmp += (this.Elmt[i][x] * M.Elmt[x][j]);
                 }
                 Mnew.Elmt[i][j] = tmp;
             }

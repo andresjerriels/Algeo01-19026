@@ -1,73 +1,10 @@
+import java.text.DecimalFormat;
+
 public class InversMatriks {
     public Matriks matriks;
 
     public InversMatriks(Matriks M){
         this.matriks = M;
-    }
-
-    void cleanMatriks(Matriks M, double tolerance) {
-
-        for (int i = 0; i <= M.getLastIdxBrs(); i++){
-            for(int j = 0; j <= M.getLastIdxKol(); j++){
-                if (Math.abs(M.Elmt[i][j]) < tolerance){
-                    M.Elmt[i][j] = 0;
-                }
-            }
-        }
-    }
-
-    public Matriks EselonBarisTereduksi() {
-        int currentBrs;
-        double faktor;
-        double tolerance = 1e-9;
-        Matriks eselon = new Matriks(this.matriks.NBrsEff, this.matriks.NKolEff);
-
-        for (int i = 0; i <= this.matriks.getLastIdxBrs(); i++){
-            for (int j = 0; j<= this.matriks.getLastIdxKol(); j++){
-                eselon.Elmt[i][j] = this.matriks.Elmt[i][j];
-            }
-        }
-
-        int ABrs = 0;
-        int AKol = 0;
-        while ((ABrs <= eselon.getLastIdxBrs()) && (AKol <= eselon.getLastIdxKol())) {
-            if (Math.abs(eselon.Elmt[ABrs][AKol]) < tolerance) {
-                currentBrs = ABrs;
-                do {
-                    currentBrs += 1;
-
-                    if ((currentBrs <= eselon.getLastIdxBrs()) && (AKol <= eselon.getLastIdxKol())) {
-                        currentBrs = ABrs;
-                        AKol += 1;
-                    }
-
-                    if (currentBrs > eselon.getLastIdxBrs()) {
-                        cleanMatriks(eselon, tolerance);
-                        return eselon;
-                    }
-                } while (Math.abs(eselon.Elmt[currentBrs][AKol]) < tolerance);
-                eselon.TukarBrs(ABrs, currentBrs);
-            }
-            faktor = 1.0 / eselon.Elmt[ABrs][AKol];
-
-            for (int j = AKol; j <= eselon.getLastIdxKol(); j++){
-                eselon.Elmt[ABrs][j] = eselon.Elmt[ABrs][j] * faktor;
-            }
-
-            for (int i = 0; i <= eselon.getLastIdxBrs(); i++){
-                if ((i != ABrs) && (Math.abs(eselon.Elmt[i][AKol]) > tolerance)){
-                    faktor = eselon.Elmt[i][AKol];
-
-                    for (int j = AKol; j <= eselon.getLastIdxKol(); j++) {
-                        eselon.Elmt[i][j] = eselon.Elmt[i][j] - (faktor * eselon.Elmt[ABrs][j]);
-                    }
-                }
-            }
-            ABrs += 1;
-            AKol += 1;
-        }
-        cleanMatriks(eselon, tolerance);
-        return eselon;
     }
 
     public void bentukMatriksInvers() {
@@ -120,4 +57,30 @@ public class InversMatriks {
         return inversible;
     }
 
+    public void SPLInvers(){
+        Matriks B = new Matriks(this.matriks.NBrsEff, 1);
+        for (int i = 0; i <= B.getLastIdxBrs(); i++) {
+            B.Elmt[i][0] = this.matriks.Elmt[i][this.matriks.getLastIdxKol()];
+            this.matriks.Elmt[i][this.matriks.getLastIdxKol()] = 0;
+        }
+
+        this.matriks.NKolEff -= 1;
+        this.bentukMatriksInvers();
+        if (this.IsInversible()){
+            this.hasilInvers();
+            this.matriks.TulisMatriks();
+            this.matriks = this.matriks.KalidenganMatriks(B);
+            this.TulisSolusiSPL();
+        } else {
+            System.out.println("Matriks tidak memiliki balikan.");
+        }
+    }
+
+    public void TulisSolusiSPL(){
+        for (int i = 0; i <= this.matriks.getLastIdxBrs(); i++){
+            DecimalFormat df = new DecimalFormat("#.##");
+
+            System.out.print("x" + (i+1) + " = " + df.format(this.matriks.Elmt[i][0]) + "   ");
+        }
+    }
 }
