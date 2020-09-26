@@ -1,19 +1,20 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 public class DariFile {
-    public File file;
-    private String namaFile;
+    public FileInputStream file;
+    public String namaFile;
 
-    public void BacaNamaFile() {
+    public DariFile() throws FileNotFoundException {
+        this.BacaNamaFile();
+    }
+
+    public void BacaNamaFile() throws FileNotFoundException {
         Scanner scan = new Scanner(System.in);
-        System.out.println("Masukkan nama File berisi matriks dengan format .txt: ");
-        System.out.println("Nama file: ");
+        System.out.println("Masukkan nama File berisi matriks dengan format test/nama_file.txt: ");
+        System.out.println("Nama file:");
         this.namaFile = scan.nextLine();
-        this.file = new File(this.namaFile);
+        this.file = new FileInputStream(this.namaFile);
     }
 
     int JmlElmtMatriks() throws IOException {

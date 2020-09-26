@@ -228,7 +228,7 @@ public class Matriks {
 
 
     // UNTUK INTERPOLASI
-    public void MakeMatriksInterpolasi(int NBrs) {
+    void MakeMatriksInterpolasi(int NBrs) {
         this.NBrsEff = NBrs;
         this.NKolEff = NBrs + 1;
 
@@ -257,6 +257,91 @@ public class Matriks {
         }
         this.MakeMatriksInterpolasi(NB);
     }
+
+	public void SolusiInterpolasi() {
+		DecimalFormat df = new DecimalFormat("#.######");
+		int brsNotZero = 0;
+		int cr = this.getLastIdxBrs();
+		boolean hasSolution = true;
+
+		//PREPARATION
+		this.EliminasiGaussJordan();
+		while (hasSolution && cr >= 0) {
+			int cc = 0;
+			boolean rowAllZero = true;
+
+			for (int j = 0; j <= this.getLastIdxKol() - 1; j++) {
+				if (this.Elmt[cr][j] != 0) {
+					rowAllZero = false;
+				}
+			}
+
+			if (rowAllZero) {
+				if (this.Elmt[cr][this.getLastIdxKol()] != 0) {
+					hasSolution = false;
+				}
+			} else {
+				brsNotZero++;
+			}
+
+			cr--;
+		}
+
+		//KASUS 1: HAS NO SOLUTION
+		if (!hasSolution) {
+			System.out.println("Polinom Interpolasi tidak dapat dihitung");
+		} else {
+			//KASUS 2: INFINITELY MANY SOLUTIONS
+			if (brsNotZero < this.NKolEff - 1) {
+				System.out.println("Polinom Interpolasi tidak dapat dihitung");
+			}
+			//KASUS 3: UNIQUE SOLUTION
+			else {
+				System.out.println("Hasil polinom interpolasinya adalah");
+				System.out.print("P(x) = ");
+				for (int i = 0; i <= this.getLastIdxBrs(); i++) {
+					if (i == 0) {
+						if (this.Elmt[i][this.getLastIdxKol()] > 0) {
+							System.out.print(df.format(this.Elmt[i][this.getLastIdxKol()]));
+						} else if (this.Elmt[i][this.getLastIdxKol()] < 0) {
+							System.out.print(df.format(this.Elmt[i][this.getLastIdxKol()]));
+						}
+					} else if (i == 1) {
+						if (this.Elmt[i][this.getLastIdxKol()] > 0) {
+							System.out.print(" + " + df.format(this.Elmt[i][this.getLastIdxKol()]) + "x");
+						} else if (this.Elmt[i][this.getLastIdxKol()] < 0) {
+							System.out.print(" - " + df.format(Math.abs(this.Elmt[i][this.getLastIdxKol()])) + "x");
+						}
+					} else {
+						if (this.Elmt[i][this.getLastIdxKol()] > 0) {
+							System.out.print(" + " + df.format(this.Elmt[i][this.getLastIdxKol()]) + "x^" + i);
+						} else if (this.Elmt[i][this.getLastIdxKol()] < 0) {
+							System.out.print(" - " + df.format(Math.abs(this.Elmt[i][this.getLastIdxKol()])) + "x^" + i);
+						}
+					}
+				}
+				System.out.println();
+			}
+		}
+		Scanner scan = new Scanner(System.in);
+		double x = 0;
+		do{
+			System.out.println("Masukkan nilai x yang ingin ditaksir (Jika ingin kembali ke menu utama, masukkan -999):");
+			x = scan.nextDouble();
+			if (x != -999) {
+				double taksiran = this.Taksiran(x);
+				System.out.println("P(" + x + ") ≈ " + taksiran);
+			}
+		} while (x != -999);
+	}
+
+	public double Taksiran(double x){
+    	double result = 0;
+		for (int i = 0; i <= this.getLastIdxBrs(); i++) {
+			result += Math.pow(x, i) * this.Elmt[i][this.getLastIdxKol()];
+		}
+		return result;
+	}
     
     //CleanMatrix
     void cleanMatriks(Matriks M, double tolerance) {
