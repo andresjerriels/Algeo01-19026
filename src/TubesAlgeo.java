@@ -1,5 +1,3 @@
-import java.io.IOException;
-
 public class TubesAlgeo {
     public static void TulisMenuWelcome() {
         System.out.println ("#=================================================#");
@@ -51,7 +49,6 @@ public class TubesAlgeo {
         System.out.println ("#=================================================#");
         System.out.print ("  Ketik '1', '2', atau '3' pada keyboard: ");
     }
-
 
     public static void main(String [] args) {
     }

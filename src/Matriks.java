@@ -1,9 +1,12 @@
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class Matriks {
+	Scanner scan;
+	
 	//ATTRIBUTES
     public double[][] Elmt = new double[100][100];
     public int NBrsEff;
@@ -17,6 +20,7 @@ public class Matriks {
     Matriks(int BrsEff, int KolEff) {
         MakeEmpty(BrsEff, KolEff);
     }
+    
     public void MakeEmpty(int NB, int NK) {
         this.NBrsEff = NB;
         this.NKolEff = NK;
@@ -41,17 +45,12 @@ public class Matriks {
 
     //Baca Matriks
     public void BacaMatriks() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Masukkan jumlah baris matriks: ");
-        int NB = scan.nextInt();
-        System.out.println("Masukkan jumlah kolom matriks: ");
-        int NK = scan.nextInt();
-        MakeEmpty(NB, NK);
-        for (int i = this.IdxBrsMin; i <= this.getLastIdxBrs(); i++){
-            for (int j = this.IdxKolMin; j <= this.getLastIdxKol(); j++){
-                this.Elmt[i][j] = scan.nextDouble();
-            }
-        }
+    	scan = new Scanner(System.in);
+    	for (int i = 0; i < this.NBrsEff; i++) {
+			for (int j = 0; j < this.NKolEff; j++) {
+				this.Elmt[i][j] = scan.nextDouble();
+			}
+		}
     }
 
     //Tulis Matriks
