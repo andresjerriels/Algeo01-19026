@@ -7,7 +7,8 @@ public class InversMatriks {
         this.matriks = M;
     }
 
-    public void bentukMatriksInvers() {
+    // Menggunakan Operasi Baris Elementer
+    public void OBEMatriksInvers() {
         int KolAwal = this.matriks.NKolEff;
         this.matriks.NKolEff += this.matriks.NBrsEff;
 
@@ -24,7 +25,7 @@ public class InversMatriks {
         this.matriks.EliminasiGaussJordan();
     }
 
-    public void hasilInvers() {
+    public void hasilInversOBE() {
         Matriks tmp = this.matriks;
 
         for (int i = 0; i <= this.matriks.getLastIdxBrs(); i++){
@@ -57,6 +58,61 @@ public class InversMatriks {
         return inversible;
     }
 
+    // Menggunakan Determinan dan Kofaktor
+    public void hitungKofaktor(Matriks temp, int p, int q){
+        int brs = 0, kol = 0;
+
+        for (int i = 0; i <= this.matriks.getLastIdxBrs(); i++){
+            for (int j = 0; j <= this.matriks.getLastIdxKol(); j++){
+                if (i != p && j != q){
+                    temp.Elmt[brs][kol++] = this.matriks.Elmt[i][j];
+
+                    if (kol == this.matriks.getLastIdxKol()){
+                        kol = 0;
+                        brs++;
+                    }
+                }
+            }
+        }
+    }
+
+    public void hasilInversKofaktor() {
+        Matriks adj = new Matriks(this.matriks.NBrsEff, this.matriks.NKolEff);
+        double det = this.matriks.DeterminanDenganKofaktor();
+
+        if (this.matriks.NKolEff == 1){
+            adj.Elmt[0][0] = 1;
+        } else {
+            int sign = 1;
+
+            for (int i = 0; i <= this.matriks.getLastIdxBrs(); i++) {
+                for (int j = 0; j <= this.matriks.getLastIdxKol(); j++){
+                    Matriks temp = new Matriks(this.matriks.NBrsEff, this.matriks.NKolEff);
+                    this.hitungKofaktor(temp, i, j);
+
+                    if ((i+j) % 2 == 0){
+                        sign = 1;
+                    } else {
+                        sign = -1;
+                    }
+
+                    temp.NBrsEff--;
+                    temp.NKolEff--;
+
+                    adj.Elmt[j][i] = sign * temp.DeterminanDenganKofaktor();
+                }
+            }
+        }
+        this.matriks = adj;
+
+        for (int i = 0; i <= this.matriks.getLastIdxBrs(); i++){
+            for (int j = 0; j <= this.matriks.getLastIdxKol(); j++) {
+                this.matriks.Elmt[i][j] /= det;
+            }
+        }
+    }
+
+    // Menyelesaikan SPL menggunakan Matriks Invers
     public void SPLInvers(){
         Matriks B = new Matriks(this.matriks.NBrsEff, 1);
         for (int i = 0; i <= B.getLastIdxBrs(); i++) {
@@ -65,9 +121,9 @@ public class InversMatriks {
         }
 
         this.matriks.NKolEff -= 1;
-        this.bentukMatriksInvers();
+        this.OBEMatriksInvers();
         if (this.IsInversible()){
-            this.hasilInvers();
+            this.hasilInversOBE();
             this.matriks.TulisMatriks();
             this.matriks = this.matriks.KalidenganMatriks(B);
             this.TulisSolusiSPL();
@@ -80,7 +136,10 @@ public class InversMatriks {
         for (int i = 0; i <= this.matriks.getLastIdxBrs(); i++){
             DecimalFormat df = new DecimalFormat("#.##");
 
-            System.out.print("x" + (i+1) + " = " + df.format(this.matriks.Elmt[i][0]) + "   ");
+            System.out.print("x" + (i+1) + " = " + df.format(this.matriks.Elmt[i][0]) + "\n");
         }
     }
+
+
+
 }
