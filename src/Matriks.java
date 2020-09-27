@@ -1,5 +1,7 @@
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.Scanner;
 
 public class Matriks {
 	//ATTRIBUTES
@@ -68,9 +70,39 @@ public class Matriks {
             }
         }
     }
-    
 
-    //=====================BASIC OPERATIONS=======================
+	public void TulisMatriksKeFile(Matriks M) throws IOException {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
+		System.out.println("Contoh: solutions/SolusiSPL.txt");
+		String namafile = scan.nextLine();
+
+		try(FileOutputStream file = new FileOutputStream(namafile)) {
+			byte[] b;
+			for (int i = M.IdxBrsMin; i <= M.getLastIdxBrs(); i++) {
+				for (int j = M.IdxKolMin; j <= M.getLastIdxKol(); j++) {
+					DecimalFormat df = new DecimalFormat("#.##");
+
+					if ((i != M.getLastIdxBrs()) && (j == M.getLastIdxKol())) {
+						String s = df.format(M.Elmt[i][M.getLastIdxKol()]);
+						b = s.getBytes();
+						file.write(b);
+					} else if ((i == M.getLastIdxBrs()) && (j == M.getLastIdxKol())) {
+						String sa = df.format(M.Elmt[M.getLastIdxBrs()][M.getLastIdxKol()]);
+						b = sa.getBytes();
+						file.write(b);
+					} else {
+						String sc = df.format(M.Elmt[i][j]) + " ";
+						b = sc.getBytes();
+						file.write(b);
+					}
+				}
+			}
+		}
+	}
+
+
+	//=====================BASIC OPERATIONS=======================
     // IsBrsAllZero
     public boolean IsBrsAllZero(int Idx) {
         int j = this.IdxKolMin;
@@ -231,39 +263,39 @@ public class Matriks {
     }
 
 
-    // UNTUK INTERPOLASI
-    void MakeMatriksInterpolasi(int NBrs) {
-        this.NBrsEff = NBrs;
-        this.NKolEff = NBrs + 1;
+	// UNTUK INTERPOLASI
+	void MakeMatriksInterpolasi(int NBrs) {
+		this.NBrsEff = NBrs;
+		this.NKolEff = NBrs + 1;
 
-        for (int i = this.IdxBrsMin; i <= this.getLastIdxBrs(); i++){
-            double x = this.Elmt[i][this.IdxBrsMin];
-            double y = this.Elmt[i][1];
-            for (int j=this.IdxKolMin;j<=this.getLastIdxKol();j++){
-                if (j != getLastIdxKol()){
-                    this.Elmt[i][j] = Math.pow(x, j);
-                } else {
-                    this.Elmt[i][j] = y;
-                }
-            }
-        }
-    }
+		for (int i = this.IdxBrsMin; i <= this.getLastIdxBrs(); i++){
+			double x = this.Elmt[i][this.IdxBrsMin];
+			double y = this.Elmt[i][1];
+			for (int j=this.IdxKolMin;j<=this.getLastIdxKol();j++){
+				if (j != getLastIdxKol()){
+					this.Elmt[i][j] = Math.pow(x, j);
+				} else {
+					this.Elmt[i][j] = y;
+				}
+			}
+		}
+	}
 
-    public void BacaMatriksInterpolasi() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Masukkan jumlah baris: ");
-        int NB = scan.nextInt();
-        this.MakeEmpty(NB, 2);
-        for (int i=this.IdxBrsMin; i <= this.getLastIdxBrs(); i++){
-            for (int j=this.IdxKolMin; j <= this.getLastIdxKol(); j++){
-                this.Elmt[i][j] = scan.nextDouble();
-            }
-        }
-        this.MakeMatriksInterpolasi(NB);
-    }
+	public void BacaMatriksInterpolasi() {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Masukkan jumlah baris: ");
+		int NB = scan.nextInt();
+		this.MakeEmpty(NB, 2);
+		for (int i=this.IdxBrsMin; i <= this.getLastIdxBrs(); i++){
+			for (int j=this.IdxKolMin; j <= this.getLastIdxKol(); j++){
+				this.Elmt[i][j] = scan.nextDouble();
+			}
+		}
+		this.MakeMatriksInterpolasi(NB);
+	}
 
-	public void SolusiInterpolasi() {
-		DecimalFormat df = new DecimalFormat("#.######");
+	public void SolusiInterpolasi() throws IOException {
+		Scanner scan = new Scanner(System.in);
 		int brsNotZero = 0;
 		int cr = this.getLastIdxBrs();
 		boolean hasSolution = true;
@@ -291,6 +323,31 @@ public class Matriks {
 			cr--;
 		}
 
+		System.out.println ("#=================================================#");
+		System.out.println ("# PENULISAN SOLUSI INTERPOLASI                    #");
+		System.out.println ("#-------------------------------------------------#");
+		System.out.println ("# Silakan pilih salah pilihan dibawah berikut!    #");
+		System.out.println ("#=================================================#");
+		System.out.println ("# 1. Tampilkan pada layar                         #");
+		System.out.println ("# 2. Simpan dalam file      	                   #");
+		System.out.println ("#=================================================#");
+		System.out.print ("  Ketik '1' atau '2' pada keyboard: ");
+
+		String pilihan = scan.nextLine();
+		while (!pilihan.equals("1") && !pilihan.equals("2")) {
+			System.out.println("Masukan Anda salah. Silakan ulangi kembali.");
+			pilihan = scan.nextLine();
+		}
+
+		if (pilihan.equals("1")){
+			this.TulisInterpolasi(hasSolution, brsNotZero);
+		} else {
+			this.TulisInterpolasiKeFile(hasSolution, brsNotZero);
+		}
+	}
+
+	public void TulisInterpolasi(boolean hasSolution, int brsNotZero) {
+		DecimalFormat df = new DecimalFormat("#.######");
 		//KASUS 1: HAS NO SOLUTION
 		if (!hasSolution) {
 			System.out.println("Polinom Interpolasi tidak dapat dihitung");
@@ -339,15 +396,96 @@ public class Matriks {
 		} while (x != -999);
 	}
 
+	public void TulisInterpolasiKeFile(boolean hasSolution, int brsNotZero) throws IOException {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
+		System.out.println("Contoh: solutions/SolusiSPL.txt");
+		String namafile = scan.nextLine();
+		DecimalFormat df = new DecimalFormat("#.######");
+
+		try (FileOutputStream file = new FileOutputStream(namafile)) {
+			byte[] b;
+			//KASUS 1: HAS NO SOLUTION
+			if (!hasSolution) {
+				String sa = "Polinom Interpolasi tidak dapat dihitung";
+				b = sa.getBytes();
+				file.write(b);
+			} else {
+				//KASUS 2: INFINITELY MANY SOLUTIONS
+				if (brsNotZero < this.NKolEff - 1) {
+					String sb = "Polinom Interpolasi tidak dapat dihitung";
+					b = sb.getBytes();
+					file.write(b);
+				}
+				//KASUS 3: UNIQUE SOLUTION
+				else {
+					String s1 = "Hasil polinom interpolasinya adalah";
+					b = s1.getBytes();
+					file.write(b);
+					String s2 = "P(x) = ";
+					b = s2.getBytes();
+					file.write(b);
+
+					for (int i = 0; i <= this.getLastIdxBrs(); i++) {
+						if (i == 0) {
+							if (this.Elmt[i][this.getLastIdxKol()] > 0) {
+								String sa1 = df.format(this.Elmt[i][this.getLastIdxKol()]);
+								b = sa1.getBytes();
+								file.write(b);
+							} else if (this.Elmt[i][this.getLastIdxKol()] < 0) {
+								String sa2 = df.format(this.Elmt[i][this.getLastIdxKol()]);
+								b = sa2.getBytes();
+								file.write(b);
+							}
+						} else if (i == 1) {
+							if (this.Elmt[i][this.getLastIdxKol()] > 0) {
+								String sb1 = " + " + df.format(this.Elmt[i][this.getLastIdxKol()]) + "x";
+								b = sb1.getBytes();
+								file.write(b);
+							} else if (this.Elmt[i][this.getLastIdxKol()] < 0) {
+								String sb2 = " - " + df.format(Math.abs(this.Elmt[i][this.getLastIdxKol()])) + "x";
+								b = sb2.getBytes();
+								file.write(b);
+							}
+						} else {
+							if (this.Elmt[i][this.getLastIdxKol()] > 0) {
+								String sc1 = " + " + df.format(this.Elmt[i][this.getLastIdxKol()]) + "x^" + i;
+								b = sc1.getBytes();
+								file.write(b);
+							} else if (this.Elmt[i][this.getLastIdxKol()] < 0) {
+								String sc2 = " - " + df.format(Math.abs(this.Elmt[i][this.getLastIdxKol()])) + "x^" + i;
+								b = sc2.getBytes();
+								file.write(b);
+							}
+						}
+					}
+					System.out.println();
+				}
+			}
+
+			double x = 0;
+			do {
+				System.out.println("Masukkan nilai x yang ingin ditaksir (Jika ingin kembali ke menu utama, masukkan -999):");
+				x = scan.nextDouble();
+				if (x != -999) {
+					double taksiran = this.Taksiran(x);
+					String sd = "P(" + x + ") ≈ " + taksiran;
+					b = sd.getBytes();
+					file.write(b);
+				}
+			} while (x != -999);
+		}
+	}
+
 	public double Taksiran(double x){
-    	double result = 0;
+		double result = 0;
 		for (int i = 0; i <= this.getLastIdxBrs(); i++) {
 			result += Math.pow(x, i) * this.Elmt[i][this.getLastIdxKol()];
 		}
 		return result;
 	}
-    
-    //CleanMatrix
+
+	//CleanMatrix
     void cleanMatriks(Matriks M, double tolerance) {
 
         for (int i = 0; i <= M.getLastIdxBrs(); i++){
