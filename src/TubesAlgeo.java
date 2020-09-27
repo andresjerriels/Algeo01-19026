@@ -51,5 +51,13 @@ public class TubesAlgeo {
     }
 
     public static void main(String [] args) {
+    	//Ini contoh deklarasi objectnya dan pemanggilan fungsi
+    	MatriksInit Mtemp = new MatriksInit(1); //buat sekarang pilihan fungsinya masih manual duluu
+    	Matriks A = new Matriks(Mtemp.NBrsEff, Mtemp.NKolEff);
+    	
+    	Mtemp.toMatriks(A);
+    	A.TulisMatriks();
+    	A.SPLGaussJordan();
+    	
     }
 }

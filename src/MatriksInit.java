@@ -11,7 +11,7 @@ public class MatriksInit {
 	String fileName;
 	
 	//Constructor
-	MatriksInit(){
+	MatriksInit(int pilihan){
 		
 		scan = new Scanner(System.in);
 		System.out.println ("Pilih salah satu cara input di bawah ini: ");
@@ -22,9 +22,36 @@ public class MatriksInit {
         while (!inputSuccess) {
         	int caraInput = scan.nextInt();
         	if (caraInput == 1) {
-            	matrixInitKeyboard();
-            	enterMatrix(scan);
-            	inputSuccess = true;
+        		if (pilihan==1) {
+        			matrixInitKeyboard();
+        			System.out.println ("Masukkan elemen-elemen matriks A, dengan urutan: ");
+        			System.out.println ("a11, a12, ..., a1m, a21, a22, ..., anm");
+                	enterMatrix(scan, this.NBrsEff, this.NKolEff-1);
+                	System.out.println ("Masukkan elemen-elemen vektor b, dengan urutan: ");
+                	System.out.println ("b1, b2, ..., bn");
+                	enterSolution(scan);
+                	inputSuccess = true;
+        		}
+        		else if (pilihan==2 || pilihan==3) {
+        			matrixInitKeyboard2();
+        			System.out.println ("Masukkan elemen-elemen matriks A, dengan urutan: ");
+        			System.out.println ("a11, a12, ..., a1m, a21, a22, ..., anm");
+                	enterMatrix(scan, this.NBrsEff, this.NKolEff);
+                	inputSuccess = true;
+        		}
+        		
+        		else if (pilihan==4) {
+        			matrixInitKeyboard3();
+        			System.out.println ("Masukkan pasangan titik x dan y sebanyak n, dengan format: ");
+        			System.out.println ("x1 y1");
+        			System.out.println ("x2 y2");
+        			System.out.println ("...");
+        			System.out.println ("xn yn");
+                	enterMatrix(scan, this.NBrsEff, this.NKolEff);
+                	inputSuccess = true;
+        		}
+        		
+            	
             } else if (caraInput == 2){
             	System.out.println("Masukkan nama file: ");
             	Scanner fileNameScanner = new Scanner(System.in);
@@ -32,7 +59,7 @@ public class MatriksInit {
             	fileNameScanner.close();
             	openFile(fileName);
         		matrixInitFile();
-        		enterMatrix(scan);
+        		enterMatrix(scan, this.NBrsEff, this.NKolEff);
         		closeFile();
         		inputSuccess = true;
             } else {
@@ -77,23 +104,50 @@ public class MatriksInit {
 	}
 	
 	
-	//Matrix initialization (entry from keyboard)
+	//Matrix initialization (entry from keyboard - versi 1) - SPL
 	public void matrixInitKeyboard() {
 		scan = new Scanner(System.in);
 		System.out.println("Masukkan jumlah baris matriks: ");
 	    this.NBrsEff = scan.nextInt();
 	    System.out.println("Masukkan jumlah kolom matriks: ");
-	    this.NKolEff = scan.nextInt();
+	    this.NKolEff = scan.nextInt()+1;
 	    
 	    this.matrix = new double[NBrsEff][NKolEff];
 	}
 	
+	//Matrix initialization (entry from keyboard - versi 2) - determinan, invers
+	public void matrixInitKeyboard2() {
+		scan = new Scanner(System.in);
+		System.out.println("Masukkan n: ");
+	    this.NBrsEff = scan.nextInt();
+	    this.NKolEff = this.NBrsEff;
+	    
+	    this.matrix = new double[NBrsEff][NKolEff];
+	}
+	
+	//Matrix initialization (entry from keyboard - versi 3) - interpolasi
+	public void matrixInitKeyboard3() {
+		scan = new Scanner(System.in);
+		System.out.println("Masukkan n: ");
+	    this.NBrsEff = scan.nextInt();
+	    this.NKolEff = 2;
+	    
+	    this.matrix = new double[NBrsEff][NKolEff];
+	}
+	
+	
 	//Enter Matrix Data Value
-	public void enterMatrix (Scanner scan) {			
-		for (int i = 0; i < this.NBrsEff; i++) {
-			for (int j = 0; j < this.NKolEff; j++) {
+	public void enterMatrix (Scanner scan, int n, int m) {			
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
 				this.matrix[i][j] = scan.nextDouble();
 			}
+		}
+	}
+	
+	public void enterSolution (Scanner scan) {
+		for (int i = 0; i < this.NBrsEff; i++) {
+			this.matrix[i][this.NKolEff-1] = scan.nextDouble();
 		}
 	}
 	
