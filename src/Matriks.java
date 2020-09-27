@@ -1,5 +1,5 @@
 import java.text.DecimalFormat;
-import java.util.Scanner;
+import java.util.*;
 
 public class Matriks {
 	//ATTRIBUTES
@@ -195,7 +195,9 @@ public class Matriks {
 		
     	EliminasiGauss();
 		for (int i=this.NBrsEff-1;i>0;i--) {
-			for (int j=0;j<=this.NKolEff-1;j++) {
+			boolean jFound = false;
+			int j = 0;
+			while(!jFound && j<=this.getLastIdxKol()) {
 				if (this.Elmt[i][j]==1) {
 					//0in nilai di atas 1 utama
 					for (int a = i-1; a>=0; a--) {
@@ -204,11 +206,13 @@ public class Matriks {
 							this.Elmt[a][b] += this.Elmt[i][b] * x;
 						}
 					}
+					jFound = true;
 				}
+				j++;
 			}
 		}
 		
-	}
+    }
 
     // Untuk Perkalian 2 Matriks
     public Matriks KalidenganMatriks(Matriks M){
@@ -270,6 +274,34 @@ public class Matriks {
         }
     }
     
+    //ItemsInRow
+    public int ItemsInRow(int n, int m) {
+    	int elmtCounter = 0;
+    	for (int i=0;i<=m;i++) {
+    		if (this.Elmt[n][i]!=0) {
+    			elmtCounter++;
+    		}
+    	}
+    	return elmtCounter;
+    }
+    
+    //Kolom1Utama
+    public int Kolom1Utama(int n) {
+    	int j = 0;
+    	int idxOne = -1;
+    	
+    	while(idxOne == -1) {
+    		if (this.Elmt[n][j]!=0) {
+    			idxOne = j;
+    		}
+    		j++;
+    	}
+    	return idxOne;
+    }
+    
+    
+    
+    
     //=====================MAIN OPERATIONS=======================
     
     //SPL Gauss
@@ -306,9 +338,132 @@ public class Matriks {
     	if (!hasSolution) {
     		System.out.println("SPL ini tidak memiliki solusi.");
     	} else {
-    		//KASUS 2: INFINITELY MANY SOLUTIONS
+    		//KASUS 2: INFINITELY MANY SOLUTION
     		if (brsNotZero<this.NKolEff-1) {
-    			System.out.println("Oke ini nanti dulu masih bingung, tapi punya solusi banyak");
+    			//Setting up additional matrix and array
+    			double[][] solution = new double[this.NKolEff-1][this.NKolEff-brsNotZero+3];
+    			boolean[] solutionDeclared = new boolean[this.NKolEff-1];
+    			for (int i=0;i<=this.getLastIdxKol()-1;i++) {
+    				solutionDeclared[i] = false;
+    			}
+    			    			
+    			//phase 1: pilih variabel mana saja yang akan dijadikan variabel parametrik
+    			int cpar = 0;
+    			int cr2 = brsNotZero-1;
+    			int cc2 = this.getLastIdxKol()-1;
+    			while(cpar < this.NKolEff-1-brsNotZero) {
+    				cc2 = this.getLastIdxKol()-1;
+    				while(cc2>=0 && cpar < this.NKolEff-1-brsNotZero) {
+    					if (solutionDeclared[cc2]==false && this.Elmt[cr2][cc2]!=0) {
+        					if(ItemsInRow(cr2,this.getLastIdxKol()-1)==1){
+        						
+        						solutionDeclared[cc2]=true;
+            					solution[cc2][this.NKolEff-brsNotZero] = 1;
+            					solution[cc2][this.NKolEff-brsNotZero+2] = this.Elmt[cr2][this.getLastIdxKol()]/this.Elmt[cr2][cc2];
+            					
+            				}
+        					else if(cc2!=Kolom1Utama(cr2) && IsKolZeroFromCr(cr2+1,cc2)) {
+        						solutionDeclared[cc2]=true;
+        						solution[cc2][this.NKolEff-brsNotZero-1] = 1;
+        						solution[cc2][this.NKolEff-brsNotZero+1] = cpar;
+        						cpar++;
+        					}
+        					
+        				}
+    					cc2--;
+    				}
+    				
+    				cr2--;
+    				
+    			}
+    			    			
+    			//phase 2: 
+    			cr2 = brsNotZero-1;
+    			cc2 = 0;
+    			for (int i=cr2;i>=0;i--) {
+    				cc2 = Kolom1Utama(i);
+    				if(solutionDeclared[cc2]==false) {
+    					solutionDeclared[cc2]=true;
+    					solution[cc2][this.NKolEff-brsNotZero+2] = this.Elmt[i][this.getLastIdxKol()];
+    					for (int k=this.getLastIdxKol()-1;k>=cc2+1;k--) {
+    						if(solution[k][this.NKolEff-brsNotZero-1]==0 && solution[k][this.NKolEff-brsNotZero]==0) {
+    							for (int j=0;j<=cpar-1;j++) {
+    								solution[cc2][j] += solution[k][j]*-(this.Elmt[i][k]);
+    							}
+    							solution[cc2][this.NKolEff-brsNotZero+2] += solution[k][this.NKolEff-brsNotZero+2]*-(this.Elmt[i][k]);
+        					}
+    						else if (solution[k][this.NKolEff-brsNotZero-1]==1 && solution[k][this.NKolEff-brsNotZero]==0) {
+    							solution[cc2][(int)solution[k][this.NKolEff-brsNotZero+1]] += this.Elmt[i][k];
+    						}
+    						else {
+    							solution[cc2][this.NKolEff-brsNotZero+2] -= solution[k][this.NKolEff-brsNotZero+2]*this.Elmt[i][k];	
+    							
+    						}
+    						
+						}
+    					
+    				}
+    				
+    			}
+    			
+    			//phase 3: completing variables with declared = false
+//    			
+//    			for (int i=0;i<=solutionDeclared.length-1;i++) {
+//    				System.out.println(solutionDeclared[i]);
+//    			}
+//    			
+    			
+    			//phase 4: printing the solution
+//    			for (int i = this.IdxBrsMin; i <= this.getLastIdxKol()-1; i++) {
+//    	            for (int j = this.IdxKolMin; j <= this.NKolEff-brsNotZero+2; j++) {
+// 	                	DecimalFormat df = new DecimalFormat("#.##");
+//
+//    	                if ((i != getLastIdxKol()) && (j == this.NKolEff-brsNotZero+2)) {
+//    	                    System.out.println(df.format(solution[i][this.NKolEff-brsNotZero+2]));
+//    	                } else if ((i == getLastIdxKol()) && (j == this.NKolEff-brsNotZero+2)) {
+//    	                    System.out.println(df.format(solution[getLastIdxKol()][this.NKolEff-brsNotZero+2]));
+//    	                } else {
+//    	                    System.out.print(df.format(solution[i][j]) + " ");
+//    	                }
+//    	            }
+//    	        }
+    			
+    			char[] variables = {'r','s','t','u','v','w','x','y','z'}; 
+    			System.out.println("SPL ini memiliki solusi banyak, yang mengikuti:");
+    			for (int i = this.IdxBrsMin; i <= this.getLastIdxKol()-1; i++) {
+    				if(solution[i][this.NKolEff-brsNotZero-1]==0 && solution[i][this.NKolEff-brsNotZero]==0) {
+    					System.out.print("x"+(i+1)+" = ");
+    					if (solution[i][this.NKolEff-brsNotZero+2]!=0) {
+    						System.out.print(df.format(solution[i][this.NKolEff-brsNotZero+2]));
+    					}
+						for (int j=0;j<=cpar-1;j++) {
+							if (solution[i][j]!=0) {
+								if (-(solution[i][j])>0){
+									System.out.print("+");
+								}
+								if (-(solution[i][j])==-1){
+									System.out.print("-");
+								}
+								if (Math.abs(solution[i][j])!=1) {
+									System.out.print(df.format(-(solution[i][j])));
+								}
+								System.out.print(variables[j]);
+							}
+						}
+						System.out.println();
+					}
+					else if (solution[i][this.NKolEff-brsNotZero-1]==1 && solution[i][this.NKolEff-brsNotZero]==0) {
+						System.out.print("x"+(i+1)+" = "+variables[(int)solution[i][this.NKolEff-brsNotZero+1]]);
+						System.out.println();
+					}
+					else {
+						System.out.print("x"+(i+1)+" = "+df.format(solution[i][this.NKolEff-brsNotZero+2]));
+						System.out.println();
+						
+					}
+    	        }
+    			    			
+    			
     		} 
     		//KASUS 3: UNIQUE SOLUTION
     		else {
@@ -362,9 +517,124 @@ public class Matriks {
     	if (!hasSolution) {
     		System.out.println("SPL ini tidak memiliki solusi.");
     	} else {
-    		//KASUS 2: INFINITELY MANY SOLUTIONS
+    		//KASUS 2: INFINITELY MANY SOLUTION
     		if (brsNotZero<this.NKolEff-1) {
-    			System.out.println("Oke ini nanti dulu masih bingung, tapi punya solusi banyak");
+    			//Setting up additional matrix and array
+    			double[][] solution = new double[this.NKolEff-1][this.NKolEff-brsNotZero+3];
+    			boolean[] solutionDeclared = new boolean[this.NKolEff-1];
+    			for (int i=0;i<=this.getLastIdxKol()-1;i++) {
+    				solutionDeclared[i] = false;
+    			}
+    			    			
+    			//phase 1: pilih variabel mana saja yang akan dijadikan variabel parametrik
+    			int cpar = 0;
+    			int cr2 = brsNotZero-1;
+    			int cc2 = this.getLastIdxKol()-1;
+    			while(cpar < this.NKolEff-1-brsNotZero) {
+    				cc2 = this.getLastIdxKol()-1;
+    				while(cc2>=0 && cpar < this.NKolEff-1-brsNotZero) {
+    					if (solutionDeclared[cc2]==false && this.Elmt[cr2][cc2]!=0) {
+        					if(ItemsInRow(cr2,this.getLastIdxKol()-1)==1){
+        						
+        						solutionDeclared[cc2]=true;
+            					solution[cc2][this.NKolEff-brsNotZero] = 1;
+            					solution[cc2][this.NKolEff-brsNotZero+2] = this.Elmt[cr2][this.getLastIdxKol()]/this.Elmt[cr2][cc2];
+            					
+            				}
+        					else if(cc2!=Kolom1Utama(cr2)) {
+        						solutionDeclared[cc2]=true;
+        						solution[cc2][this.NKolEff-brsNotZero-1] = 1;
+        						solution[cc2][this.NKolEff-brsNotZero+1] = cpar;
+        						cpar++;
+        					}
+        					
+        				}
+    					cc2--;
+    				}
+    				
+    				cr2--;
+    				
+    			}
+    			    			
+    			//phase 2: 
+    			cr2 = brsNotZero-1;
+    			cc2 = 0;
+    			for (int i=cr2;i>=0;i--) {
+    				cc2 = Kolom1Utama(i);
+    				if(solutionDeclared[cc2]==false) {
+    					solutionDeclared[cc2]=true;
+    					solution[cc2][this.NKolEff-brsNotZero+2] = this.Elmt[i][this.getLastIdxKol()];
+    					for (int k=cc2+1;k<=this.getLastIdxKol()-1;k++) {
+    						if(solution[k][this.NKolEff-brsNotZero-1]==0 && solution[k][this.NKolEff-brsNotZero]==0) {
+    							for (int j=0;j<=cpar-1;j++) {
+    								solution[cc2][j] += solution[k][j]*-(this.Elmt[i][k]);	
+    							}
+        					}
+    						else if (solution[k][this.NKolEff-brsNotZero-1]==1 && solution[k][this.NKolEff-brsNotZero]==0) {
+    							solution[cc2][(int)solution[k][this.NKolEff-brsNotZero+1]] += this.Elmt[i][k];
+    						}
+    						else {
+    							solution[cc2][this.NKolEff-brsNotZero+2] -= solution[cc2][(int)solution[k][this.NKolEff-brsNotZero+2]]*this.Elmt[i][k];	
+    							
+    						}
+    						
+						}
+    					
+    				}
+    				
+    			}
+    			
+    			
+    			//phase 4: printing the solution
+//    			for (int i = this.IdxBrsMin; i <= this.getLastIdxKol()-1; i++) {
+//    	            for (int j = this.IdxKolMin; j <= this.NKolEff-brsNotZero+2; j++) {
+// 	                	DecimalFormat df = new DecimalFormat("#.##");
+//
+//    	                if ((i != getLastIdxKol()) && (j == this.NKolEff-brsNotZero+2)) {
+//    	                    System.out.println(df.format(solution[i][this.NKolEff-brsNotZero+2]));
+//    	                } else if ((i == getLastIdxKol()) && (j == this.NKolEff-brsNotZero+2)) {
+//    	                    System.out.println(df.format(solution[getLastIdxKol()][this.NKolEff-brsNotZero+2]));
+//    	                } else {
+//    	                    System.out.print(df.format(solution[i][j]) + " ");
+//    	                }
+//    	            }
+//    	        }
+    			char[] variables = {'r','s','t','u','v','w','x','y','z'}; 
+    			System.out.println("SPL ini memiliki solusi banyak, yang mengikuti:");
+    			for (int i = this.IdxBrsMin; i <= this.getLastIdxKol()-1; i++) {
+    				if(solution[i][this.NKolEff-brsNotZero-1]==0 && solution[i][this.NKolEff-brsNotZero]==0) {
+    					System.out.print("x"+(i+1)+" = ");
+    					if (solution[i][this.NKolEff-brsNotZero+2]!=0) {
+    						System.out.print(df.format(solution[i][this.NKolEff-brsNotZero+2]));
+    					}
+						for (int j=0;j<=cpar-1;j++) {
+							if (solution[i][j]!=0) {
+								if (-(solution[i][j])>0){
+									System.out.print("+");
+								}
+								if (-(solution[i][j])==-1){
+									System.out.print("-");
+								}
+								if (Math.abs(-solution[i][j])!=1) {
+									System.out.print(df.format(-(solution[i][j])));
+								}
+								System.out.print(variables[j]);
+							}
+						}
+						System.out.println();
+					}
+					else if (solution[i][this.NKolEff-brsNotZero-1]==1 && solution[i][this.NKolEff-brsNotZero]==0) {
+						System.out.print("x"+(i+1)+" = "+variables[(int)solution[i][this.NKolEff-brsNotZero+1]]);
+						System.out.println();
+					}
+					else {
+						System.out.print("x"+(i+1)+" = "+df.format(solution[i][this.NKolEff-brsNotZero+2]));
+						System.out.println();
+						
+					}
+    	        }
+    			    			
+    			
     		} 
     		//KASUS 3: UNIQUE SOLUTION
     		else {
