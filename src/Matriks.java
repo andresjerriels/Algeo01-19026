@@ -56,7 +56,7 @@ public class Matriks {
     public void TulisMatriks() {
         for (int i = this.IdxBrsMin; i <= this.getLastIdxBrs(); i++) {
             for (int j = this.IdxKolMin; j <= this.getLastIdxKol(); j++) {
-                DecimalFormat df = new DecimalFormat("#.##");
+                DecimalFormat df = new DecimalFormat("#.#####");
 
                 if ((i != getLastIdxBrs()) && (j == getLastIdxKol())) {
                     System.out.println(df.format(this.Elmt[i][getLastIdxKol()]));
@@ -353,7 +353,45 @@ public class Matriks {
                 }
             }
         }
-    }
+	}
+	
+	//Untuk Multiple Linear Regression
+	//Jumlah Perkalian 2 Kolom
+	public double SumMul2BrsMLR(int IdxKol1, int IdxKol2){
+		double sum = 0;
+		int n = this.NBrsEff;
+		int k = this.NKolEff;
+		if(IdxKol1==0 && IdxKol2==0){
+			sum = n;
+		} else if(IdxKol2 == k){
+			if(IdxKol1==0){
+				for(int i=0; i<n ;i++){
+					sum += this.Elmt[i][0];
+				}
+			} else{
+				for(int i=0; i<n ;i++){
+					sum += this.Elmt[i][IdxKol1]*this.Elmt[i][0];
+				}
+			}
+		} else if(IdxKol1==0 || IdxKol2==0){
+			if(IdxKol1==0){
+				for(int i=0; i<n; i++){
+					sum += this.Elmt[i][IdxKol2];
+				}
+			} else{
+				//IdxKol2==0
+				for(int i=0; i<n; i++){
+					sum+= this.Elmt[i][IdxKol1];
+				}
+			}
+		} else{
+			for(int i=0; i<n; i++){
+				sum+= this.Elmt[i][IdxKol1] * this.Elmt[i][IdxKol2];
+			}
+		}
+
+		return sum;
+	}
     
     //=====================MAIN OPERATIONS=======================
     
@@ -464,7 +502,8 @@ public class Matriks {
     }
 
 	//SPL CRAMER
-	public void SPLCramer(){
+	//SPL CRAMER Dapat mengembalikan array dari detMinor/detUtama untuk digunakan dalam Multiple Linear Regression
+	public double[] SPLCramer(boolean isMLR){
 		DecimalFormat df = new DecimalFormat("#.##");
 		int n = this.NBrsEff;
 		Matriks utama = new Matriks(n, n);
@@ -480,27 +519,37 @@ public class Matriks {
 			detMinor[i] = utama.DeterminanDenganKofaktor();
 			this.TukarKolCramer(i, this.getLastIdxKol(), utama);
 		}
-		if(detUtama==0){
-			boolean isAllDetZero = true;
-			int i=0;
-			while(i<n && isAllDetZero){
-				if(detMinor[i]!=0){
-					isAllDetZero = false;
-				}else{
-					i+=1;
+		if(!isMLR){
+			// Untuk SPL Biasa
+			if(detUtama==0){
+				boolean isAllDetZero = true;
+				int i=0;
+				while(i<n && isAllDetZero){
+					if(detMinor[i]!=0){
+						isAllDetZero = false;
+					}else{
+						i+=1;
+					}
+				}
+				if(isAllDetZero){
+					System.out.println("Solusi SPL tidak dapat dicari dengan metode cramer, karena SPL ini memiliki banyak solusi.");
+				} else{
+					System.out.println("SPL ini tidak memiliki solusi.");
+				}
+			} else{
+				System.out.println("SPL ini memiliki solusi unik, yaitu:");
+				for (int i=0; i<n;i++) {
+					System.out.print("x"+(i+1)+" = "+ df.format(detMinor[i]/detUtama)+"\n");
 				}
 			}
-			if(isAllDetZero){
-				System.out.println("Solusi SPL tidak dapat dicari dengan metode cramer, karena SPL ini memiliki banyak solusi.");
-			} else{
-				System.out.println("SPL ini tidak memiliki solusi.");
-			}
-		} else{
-			System.out.println("SPL ini memiliki solusi unik, yaitu:");
-			for (int i=0; i<n;i++) {
-				System.out.print("x"+(i+1)+" = "+ df.format(detMinor[i]/detUtama)+"\n");
-			}
 		}
+
+		//Khusus Untuk Multiple Linear Regression
+		double[] solusi = new double[n];
+		for(int i=0; i<n; i++){
+			solusi[i] = detMinor[i]/detUtama;
+		}
+		return solusi;
 	}
 
     //Determinan OBE
@@ -572,6 +621,60 @@ public class Matriks {
 			}
 			return det;
 		}
-    }
+	}
+
+	// Multiple Linear Regression
+	public void MultipleLinearRegression(){
+		//Preparation: Membuat SPL dari Tabel Data dengan Normal Estimation Equation for Multiple Linear Regression
+		int x = this.NKolEff+1;
+		int y = this.NKolEff;
+		Matriks spl = new Matriks(y, x);
+		for(int i=0; i<y; i++){
+			for(int j=0; j<x; j++){
+				spl.Elmt[i][j] = this.SumMul2BrsMLR(i, j);
+			}
+		}
+		System.out.println("\nSetelah diterapkan Normal Estimation Equation for Multiple Linear Regression, maka diperoleh sistem persamaan linear yang direpresentasikan dalam matriks augmented sebagai berikut:");
+		spl.TulisMatriks();
+		
+		//Perhitungan bo, b1, b2, ..., bk
+		double[] koef = new double[y];
+		koef = spl.SPLCramer(true);
+		int n = koef.length;
+
+		//Print persamaan
+		DecimalFormat df = new DecimalFormat("#.##");
+		System.out.println("\nBerikut adalah persamaan untuk mendapatkan nilai Nitrous Oxide (y):");
+		System.out.print("y = ");
+		for(int i=0; i<n; i++){
+			if(i==0){
+				System.out.print(df.format(koef[i]));
+			} else{
+				if(koef[i]>0){
+					System.out.print(" + "+df.format(koef[i])+" x"+i);
+				} else if (koef[i]<0){
+					System.out.print(" - "+df.format(Math.abs(koef[i]))+" x"+i);
+				} else{
+					continue;
+				}
+			}
+		}
+		System.out.print("\n");
+
+		// Menerima masukan user untuk nilai Humidity, Temperatur, dan Tekanan Udara 
+		System.out.println("\nUntuk mengetahui estimasi nilai Nitrous Oxide, masukkan beberapa data yang diperlukan.");
+		Scanner sc= new Scanner(System.in);  
+		System.out.print("Masukkan Nilai Humidity: ");  
+		double h= sc.nextDouble();  
+		System.out.print("Masukkan Nilai Temperatur: ");  
+		double t= sc.nextDouble();  
+		System.out.print("Masukkan Nilai Tekanan Udara: ");  
+		double u= sc.nextDouble();
+		
+		//Perhitungan nilai Nitrous Oxide
+		double nitrous = koef[0] + h*koef[1] + t*koef[2] + u*koef[3];
+		System.out.println("Berdasarkan data tersebut, didapatkan nilai Nitrous Oxide sebesar " + df.format(nitrous));  
+	
+	}  
 
 }
