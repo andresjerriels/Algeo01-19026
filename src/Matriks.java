@@ -666,28 +666,6 @@ public class Matriks {
     				
     			}
     			
-    			//phase 3: completing variables with declared = false
-//    			
-//    			for (int i=0;i<=solutionDeclared.length-1;i++) {
-//    				System.out.println(solutionDeclared[i]);
-//    			}
-//    			
-    			
-    			//phase 4: printing the solution
-//    			for (int i = this.IdxBrsMin; i <= this.getLastIdxKol()-1; i++) {
-//    	            for (int j = this.IdxKolMin; j <= this.NKolEff-brsNotZero+2; j++) {
-// 	                	DecimalFormat df = new DecimalFormat("#.##");
-//
-//    	                if ((i != getLastIdxKol()) && (j == this.NKolEff-brsNotZero+2)) {
-//    	                    System.out.println(df.format(solution[i][this.NKolEff-brsNotZero+2]));
-//    	                } else if ((i == getLastIdxKol()) && (j == this.NKolEff-brsNotZero+2)) {
-//    	                    System.out.println(df.format(solution[getLastIdxKol()][this.NKolEff-brsNotZero+2]));
-//    	                } else {
-//    	                    System.out.print(df.format(solution[i][j]) + " ");
-//    	                }
-//    	            }
-//    	        }
-    			
     			char[] variables = {'r','s','t','u','v','w','x','y','z'}; 
     			System.out.println("SPL ini memiliki solusi banyak, yang mengikuti:");
     			for (int i = this.IdxBrsMin; i <= this.getLastIdxKol()-1; i++) {
@@ -844,21 +822,6 @@ public class Matriks {
     				
     			}
     			
-    			
-    			//phase 4: printing the solution
-//    			for (int i = this.IdxBrsMin; i <= this.getLastIdxKol()-1; i++) {
-//    	            for (int j = this.IdxKolMin; j <= this.NKolEff-brsNotZero+2; j++) {
-// 	                	DecimalFormat df = new DecimalFormat("#.##");
-//
-//    	                if ((i != getLastIdxKol()) && (j == this.NKolEff-brsNotZero+2)) {
-//    	                    System.out.println(df.format(solution[i][this.NKolEff-brsNotZero+2]));
-//    	                } else if ((i == getLastIdxKol()) && (j == this.NKolEff-brsNotZero+2)) {
-//    	                    System.out.println(df.format(solution[getLastIdxKol()][this.NKolEff-brsNotZero+2]));
-//    	                } else {
-//    	                    System.out.print(df.format(solution[i][j]) + " ");
-//    	                }
-//    	            }
-//    	        }
     			char[] variables = {'r','s','t','u','v','w','x','y','z'}; 
     			System.out.println("SPL ini memiliki solusi banyak, yang mengikuti:");
     			for (int i = this.IdxBrsMin; i <= this.getLastIdxKol()-1; i++) {
