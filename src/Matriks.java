@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -70,7 +69,7 @@ public class Matriks {
         }
     }
 
-	public void TulisMatriksKeFile(Matriks M) throws IOException {
+	public void TulisMatriksKeFile() throws IOException {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
 		System.out.println("Contoh: solutions/SolusiSPL.txt");
@@ -78,20 +77,20 @@ public class Matriks {
 
 		try(FileOutputStream file = new FileOutputStream(namafile)) {
 			byte[] b;
-			for (int i = M.IdxBrsMin; i <= M.getLastIdxBrs(); i++) {
-				for (int j = M.IdxKolMin; j <= M.getLastIdxKol(); j++) {
+			for (int i = this.IdxBrsMin; i <= this.getLastIdxBrs(); i++) {
+				for (int j = this.IdxKolMin; j <= this.getLastIdxKol(); j++) {
 					DecimalFormat df = new DecimalFormat("#.##");
 
-					if ((i != M.getLastIdxBrs()) && (j == M.getLastIdxKol())) {
-						String s = df.format(M.Elmt[i][M.getLastIdxKol()]);
+					if ((i != this.getLastIdxBrs()) && (j == this.getLastIdxKol())) {
+						String s = df.format(this.Elmt[i][this.getLastIdxKol()]);
 						b = s.getBytes();
 						file.write(b);
-					} else if ((i == M.getLastIdxBrs()) && (j == M.getLastIdxKol())) {
-						String sa = df.format(M.Elmt[M.getLastIdxBrs()][M.getLastIdxKol()]);
+					} else if ((i == this.getLastIdxBrs()) && (j == this.getLastIdxKol())) {
+						String sa = df.format(this.Elmt[this.getLastIdxBrs()][this.getLastIdxKol()]);
 						b = sa.getBytes();
 						file.write(b);
 					} else {
-						String sc = df.format(M.Elmt[i][j]) + " ";
+						String sc = df.format(this.Elmt[i][j]) + " ";
 						b = sc.getBytes();
 						file.write(b);
 					}
