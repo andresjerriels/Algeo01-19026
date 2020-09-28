@@ -99,6 +99,7 @@ public class TubesAlgeo {
         char status = scan.next().charAt(0);
         while(status == 'Y'){
             TulisMenuUtama();
+        	scan = new Scanner(System.in);
             int operasi = scan.nextInt();
             while(operasi<1 || operasi>6){
                 MasukanMenuUtamaSalah();
@@ -143,7 +144,8 @@ public class TubesAlgeo {
                     Mtemp.toMatriks(A);
                     double[] determinan = new double[A.NBrsEff]; 
                     determinan = A.SPLCramer(false);
-                }  // else, metode==5 membuat program kembali ke menu utama
+                }
+                // else, metode==5 membuat program kembali ke menu utama
             } else if(operasi==2){
                 // Determinan
                 TulisMenuDeterminan();
@@ -220,8 +222,7 @@ public class TubesAlgeo {
                 // Keluar Program
                 status = 'N';
             }
-        }
-        
+        }        
     }
 }
 

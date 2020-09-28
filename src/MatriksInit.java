@@ -76,11 +76,11 @@ public class MatriksInit {
             	System.out.println("Masukkan nama file: ");
             	Scanner fileNameScanner = new Scanner(System.in);
             	fileName = fileNameScanner.next();
-            	fileNameScanner.close();
+//            	fileNameScanner.close();
             	openFile(fileName);
         		matrixInitFile();
         		enterMatrix(scan, this.NBrsEff, this.NKolEff);
-        		closeFile();
+//        		closeFile();
         		inputSuccess = true;
             } else {
             	System.out.println("Pilihan tidak valid, silakan coba lagi");
@@ -101,9 +101,9 @@ public class MatriksInit {
 	}
 	
 	//Close File (entry from file)
-	public void closeFile() {
-		scan.close();
-	}
+//	public void closeFile() {
+//		scan.close();
+//	}
 	
 	//Matrix initialization (entry from file)
 	public void matrixInitFile() {
@@ -119,7 +119,7 @@ public class MatriksInit {
 		this.NKolEff /= this.NBrsEff;
 		this.matrix = new double[NBrsEff][NKolEff];
 		
-		closeFile();
+//		closeFile();
 		openFile(fileName);
 	}
 	
@@ -159,9 +159,8 @@ public class MatriksInit {
 		public void matrixInitKeyboard4() {
 			scan = new Scanner(System.in);
 			System.out.println("Masukkan jumlah peubah (n): ");
-			this.NKolEff = scan.nextInt() + 1;
-			System.out.println("Masukkan jumlah data (i): ");
-			this.NBrsEff = scan.nextInt();
+		    this.NBrsEff = scan.nextInt();
+		    this.NKolEff = this.NBrsEff+1;
 		    
 		    this.matrix = new double[NBrsEff][NKolEff];
 		}
