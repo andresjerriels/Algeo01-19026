@@ -922,7 +922,7 @@ public class Matriks {
 	}
 
     //Determinan OBE
-    public float DeterminanOBE() {
+    public double DeterminanOBE() {
 		int tukarBaris = 0;
 		int hasil = 1;
 		
