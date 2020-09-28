@@ -83,14 +83,17 @@ public class Matriks {
 
 					if ((i != this.getLastIdxBrs()) && (j == this.getLastIdxKol())) {
 						String s = df.format(this.Elmt[i][this.getLastIdxKol()]) + "\n";
+						System.out.print(s);
 						b = s.getBytes();
 						file.write(b);
 					} else if ((i == this.getLastIdxBrs()) && (j == this.getLastIdxKol())) {
 						String sa = df.format(this.Elmt[this.getLastIdxBrs()][this.getLastIdxKol()]) + "\n";
+						System.out.print(sa);
 						b = sa.getBytes();
 						file.write(b);
 					} else {
 						String sc = df.format(this.Elmt[i][j]) + " ";
+						System.out.print(sc);
 						b = sc.getBytes();
 						file.write(b);
 					}
@@ -406,21 +409,25 @@ public class Matriks {
 			//KASUS 1: HAS NO SOLUTION
 			if (!hasSolution) {
 				String sa = "Polinom Interpolasi tidak dapat dihitung\n";
+				System.out.print(sa);
 				b = sa.getBytes();
 				file.write(b);
 			} else {
 				//KASUS 2: INFINITELY MANY SOLUTIONS
 				if (brsNotZero < this.NKolEff - 1) {
 					String sb = "Polinom Interpolasi tidak dapat dihitung\n";
+					System.out.print(sb);
 					b = sb.getBytes();
 					file.write(b);
 				}
 				//KASUS 3: UNIQUE SOLUTION
 				else {
 					String s1 = "Hasil polinom interpolasinya adalah\n";
+					System.out.print(s1);
 					b = s1.getBytes();
 					file.write(b);
 					String s2 = "P(x) = ";
+					System.out.print(s2);
 					b = s2.getBytes();
 					file.write(b);
 
@@ -428,30 +435,36 @@ public class Matriks {
 						if (i == 0) {
 							if (this.Elmt[i][this.getLastIdxKol()] > 1e-9) {
 								String sa1 = df.format(this.Elmt[i][this.getLastIdxKol()]);
+								System.out.print(sa1);
 								b = sa1.getBytes();
 								file.write(b);
 							} else if (this.Elmt[i][this.getLastIdxKol()] < -1e-9) {
 								String sa2 = df.format(this.Elmt[i][this.getLastIdxKol()]);
+								System.out.print(sa2);
 								b = sa2.getBytes();
 								file.write(b);
 							}
 						} else if (i == 1) {
 							if (this.Elmt[i][this.getLastIdxKol()] > 1e-9) {
 								String sb1 = " + " + df.format(this.Elmt[i][this.getLastIdxKol()]) + "x";
+								System.out.print(sb1);
 								b = sb1.getBytes();
 								file.write(b);
 							} else if (this.Elmt[i][this.getLastIdxKol()] < -1e-9) {
 								String sb2 = " - " + df.format(Math.abs(this.Elmt[i][this.getLastIdxKol()])) + "x";
+								System.out.print(sb2);
 								b = sb2.getBytes();
 								file.write(b);
 							}
 						} else {
 							if (this.Elmt[i][this.getLastIdxKol()] > 1e-9) {
 								String sc1 = " + " + df.format(this.Elmt[i][this.getLastIdxKol()]) + "x^" + i;
+								System.out.print(sc1);
 								b = sc1.getBytes();
 								file.write(b);
 							} else if (this.Elmt[i][this.getLastIdxKol()] < -1e-9) {
 								String sc2 = " - " + df.format(Math.abs(this.Elmt[i][this.getLastIdxKol()])) + "x^" + i;
+								System.out.print(sc2);
 								b = sc2.getBytes();
 								file.write(b);
 							}
@@ -468,6 +481,7 @@ public class Matriks {
 				if (x != -999) {
 					double taksiran = this.Taksiran(x);
 					String sd = "\nP(" + x + ") ≈ " + taksiran;
+					System.out.println("P(" + x + ") ≈ " + taksiran);
 					b = sd.getBytes();
 					file.write(b);
 				}

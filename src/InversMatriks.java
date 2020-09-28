@@ -1,4 +1,7 @@
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Scanner;
 
 public class InversMatriks {
     public Matriks matriks;
@@ -112,8 +115,33 @@ public class InversMatriks {
         }
     }
 
+    public void TulisMatriksInvers() throws IOException {
+        Scanner scan = new Scanner(System.in);
+        System.out.println ("#=================================================#");
+        System.out.println ("# PENULISAN MATRIKS BALIKAN                       #");
+        System.out.println ("#-------------------------------------------------#");
+        System.out.println ("# Silakan pilih salah pilihan dibawah berikut!    #");
+        System.out.println ("#=================================================#");
+        System.out.println ("# 1. Tampilkan pada layar                         #");
+        System.out.println ("# 2. Simpan dalam file      	                   #");
+        System.out.println ("#=================================================#");
+        System.out.print ("  Ketik '1' atau '2' pada keyboard: ");
+
+        String pilihan = scan.nextLine();
+        while (!pilihan.equals("1") && !pilihan.equals("2")){
+            System.out.println("Masukan Anda salah. Silakan ulangi kembali.");
+            pilihan = scan.nextLine();
+        }
+
+        if (pilihan.equals("1")) {
+            this.matriks.TulisMatriks();
+        } else {
+            this.matriks.TulisMatriksKeFile();
+        }
+    }
+
     // Menyelesaikan SPL menggunakan Matriks Invers
-    public void SPLInvers(){
+    public void SPLInvers() throws IOException{
         Matriks B = new Matriks(this.matriks.NBrsEff, 1);
         for (int i = 0; i <= B.getLastIdxBrs(); i++) {
             B.Elmt[i][0] = this.matriks.Elmt[i][this.matriks.getLastIdxKol()];
@@ -131,8 +159,33 @@ public class InversMatriks {
             System.out.println("Matriks tidak memiliki balikan.");
         }
     }
+    public void TulisSolusiSPL() throws IOException {
+        Scanner scan = new Scanner(System.in);
+        System.out.println ("#=================================================#");
+        System.out.println ("# PENULISAN SOLUSI SPL                            #");
+        System.out.println ("#-------------------------------------------------#");
+        System.out.println ("# Silakan pilih salah pilihan dibawah berikut!    #");
+        System.out.println ("#=================================================#");
+        System.out.println ("# 1. Tampilkan pada layar                         #");
+        System.out.println ("# 2. Simpan dalam file      	                   #");
+        System.out.println ("#=================================================#");
+        System.out.print ("  Ketik '1' atau '2' pada keyboard: ");
 
-    public void TulisSolusiSPL(){
+        String pilihan = scan.nextLine();
+        while (!pilihan.equals("1") && !pilihan.equals("2")){
+            System.out.println("Masukan Anda salah. Silakan ulangi kembali.");
+            pilihan = scan.nextLine();
+        }
+
+        if (pilihan.equals("1")) {
+            this.SolusiSPL();
+        } else {
+            this.SolusiSPLKeFile();
+        }
+
+    }
+
+    public void SolusiSPL(){
         for (int i = 0; i <= this.matriks.getLastIdxBrs(); i++){
             DecimalFormat df = new DecimalFormat("#.##");
 
@@ -140,6 +193,22 @@ public class InversMatriks {
         }
     }
 
+    public void SolusiSPLKeFile() throws IOException {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
+        System.out.println("Contoh: solutions/SolusiSPL.txt");
+        String namafile = scan.nextLine();
 
+        try (FileOutputStream file = new FileOutputStream(namafile)) {
+            byte[] b;
+            for (int i = 0; i <= this.matriks.getLastIdxBrs(); i++) {
+                DecimalFormat df = new DecimalFormat("#.##");
+                String s = ("x" + (i + 1) + " = " + df.format(this.matriks.Elmt[i][0]) + "\n");
+                System.out.print(s);
+                b = s.getBytes();
+                file.write(b);
+            }
+        }
+    }
 
 }

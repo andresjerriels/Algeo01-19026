@@ -191,8 +191,7 @@ public class TubesAlgeo {
                     InversA.OBEMatriksInvers();
                     if (InversA.IsInversible()){
                         InversA.hasilInversOBE();
-                        InversA.matriks.TulisMatriks();
-                        // Kalo nyimpen ke file InversA.matriks.TulisMatriksKeFile()
+                        InversA.TulisMatriksInvers();
                     } else {
                         System.out.println("Matriks tidak memiliki balikan.");
                     }
@@ -207,9 +206,7 @@ public class TubesAlgeo {
                         System.out.println("Matriks tidak memiliki balikan.");
                     } else {
                         InversA.hasilInversKofaktor();
-                        InversA.matriks.TulisMatriks();
-                        // Kalo nyimpen ke file InversA.matriks.TulisMatriksKeFile()
-
+                        InversA.TulisMatriksInvers();
                     }
 
                 }
