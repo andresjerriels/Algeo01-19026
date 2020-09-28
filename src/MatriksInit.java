@@ -25,13 +25,12 @@ public class MatriksInit {
         		if (pilihan==1) {
         			matrixInitKeyboard();
         			System.out.println ("Masukkan elemen-elemen matriks A, dengan urutan: ");
-        			System.out.println ("Masukkan elemen-elemen matriks A, dengan urutan: ");
         			System.out.println ("a11 a12 a13 ... a1m");
         			System.out.println ("a21 a22 a23 ... a2m");
         			System.out.println ("...");
         			System.out.println ("an1 an2 an3 ... anm");
                 	enterMatrix(scan, this.NBrsEff, this.NKolEff-1);
-                	System.out.println ("Masukkan elemen-elemen vektor b, dengan urutan: ");
+                	System.out.println ("Masukkan elemen-elemen matriks b, dengan urutan: ");
                 	System.out.println ("b1");
                 	System.out.println ("b2");
                 	System.out.println ("...");
