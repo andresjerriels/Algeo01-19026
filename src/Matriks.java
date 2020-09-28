@@ -674,8 +674,9 @@ public class Matriks {
     						System.out.print(df.format(solution[i][this.NKolEff-brsNotZero+2]));
     					}
 						for (int j=0;j<=cpar-1;j++) {
+							int cOutput = 0;
 							if (solution[i][j]!=0) {
-								if (-(solution[i][j])>0){
+								if (-(solution[i][j])>0 && (cOutput!=0 || solution[i][this.NKolEff-brsNotZero+2]!=0)){
 									System.out.print("+");
 								}
 								if (-(solution[i][j])==-1){
@@ -685,6 +686,7 @@ public class Matriks {
 									System.out.print(df.format(-(solution[i][j])));
 								}
 								System.out.print(variables[j]);
+								cOutput++;
 							}
 						}
 						System.out.println();
@@ -830,17 +832,19 @@ public class Matriks {
     						System.out.print(df.format(solution[i][this.NKolEff-brsNotZero+2]));
     					}
 						for (int j=0;j<=cpar-1;j++) {
+							int cOutput = 0;
 							if (solution[i][j]!=0) {
-								if (-(solution[i][j])>0){
+								if (-(solution[i][j])>0 && (cOutput!=0 || solution[i][this.NKolEff-brsNotZero+2]!=0)){
 									System.out.print("+");
 								}
 								if (-(solution[i][j])==-1){
 									System.out.print("-");
 								}
-								if (Math.abs(-solution[i][j])!=1) {
+								if (Math.abs(solution[i][j])!=1) {
 									System.out.print(df.format(-(solution[i][j])));
 								}
 								System.out.print(variables[j]);
+								cOutput++;
 							}
 						}
 						System.out.println();

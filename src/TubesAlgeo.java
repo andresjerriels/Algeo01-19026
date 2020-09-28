@@ -50,13 +50,6 @@ public class TubesAlgeo {
         System.out.print ("  Ketik '1', '2', atau '3' pada keyboard: ");
     }
 
-    public static void main(String [] args) {
-    	//Ini contoh deklarasi objectnya dan pemanggilan fungsi
-    	MatriksInit Mtemp = new MatriksInit(5); //buat sekarang pilihan fungsinya masih manual duluu
-    	Matriks A = new Matriks(Mtemp.NBrsEff, Mtemp.NKolEff);
-    	
-    	Mtemp.toMatriks(A);
-    	A.TulisMatriks();
-    	
+    public static void main(String [] args) {    	
     }
 }
