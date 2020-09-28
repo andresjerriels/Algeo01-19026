@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 public class TubesAlgeo {
@@ -92,7 +93,7 @@ public class TubesAlgeo {
     }
 
 
-    public static void main(String [] args) {
+    public static void main(String [] args) throws IOException {
         
         TulisMenuWelcome();
         Scanner scan = new Scanner(System.in);
@@ -212,7 +213,15 @@ public class TubesAlgeo {
                     }
 
                 }
-            }else if(operasi==5){
+            } else if (operasi == 4) {
+                MatriksInit Mtemp = new MatriksInit(4);
+                Matriks A = new Matriks(Mtemp.NBrsEff, Mtemp.NKolEff);
+
+                Mtemp.toMatriks(A);
+                A.MakeMatriksInterpolasi(A.NBrsEff);
+                A.SolusiInterpolasi();
+
+            } else if(operasi==5){
                 //Regresi Linear Berganda
                 MatriksInit Mtemp = new MatriksInit(5); 
         	    Matriks A = new Matriks(Mtemp.NBrsEff, Mtemp.NKolEff);
