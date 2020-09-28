@@ -1007,8 +1007,6 @@ public class Matriks {
 				spl.Elmt[i][j] = this.SumMul2BrsMLR(i, j);
 			}
 		}
-		System.out.println("\nSetelah diterapkan Normal Estimation Equation for Multiple Linear Regression, maka diperoleh sistem persamaan linear yang direpresentasikan dalam matriks augmented sebagai berikut:");
-		spl.TulisMatriks();
 		
 		//Perhitungan bo, b1, b2, ..., bk
 		double[] koef = new double[y];
@@ -1016,17 +1014,17 @@ public class Matriks {
 		int n = koef.length;
 
 		//Print persamaan
-		DecimalFormat df = new DecimalFormat("#.##");
-		System.out.println("\nBerikut adalah persamaan untuk mendapatkan nilai Nitrous Oxide (y):");
+		DecimalFormat eq = new DecimalFormat("#.#####");
+		System.out.println("\nBerikut adalah persamaan yang didapatkan dengan Multiple Linear Regression:");
 		System.out.print("y = ");
 		for(int i=0; i<n; i++){
 			if(i==0){
-				System.out.print(df.format(koef[i]));
+				System.out.print(eq.format(koef[i]));
 			} else{
 				if(koef[i]>0){
-					System.out.print(" + "+df.format(koef[i])+" x"+i);
+					System.out.print(" + "+eq.format(koef[i])+" x"+i);
 				} else if (koef[i]<0){
-					System.out.print(" - "+df.format(Math.abs(koef[i]))+" x"+i);
+					System.out.print(" - "+eq.format(Math.abs(koef[i]))+" x"+i);
 				} else{
 					continue;
 				}
@@ -1034,19 +1032,23 @@ public class Matriks {
 		}
 		System.out.print("\n");
 
-		// Menerima masukan user untuk nilai Humidity, Temperatur, dan Tekanan Udara 
-		System.out.println("\nUntuk mengetahui estimasi nilai Nitrous Oxide, masukkan beberapa data yang diperlukan.");
-		Scanner sc= new Scanner(System.in);  
-		System.out.print("Masukkan Nilai Humidity: ");  
-		double h= sc.nextDouble();  
-		System.out.print("Masukkan Nilai Temperatur: ");  
-		double t= sc.nextDouble();  
-		System.out.print("Masukkan Nilai Tekanan Udara: ");  
-		double u= sc.nextDouble();
-		
-		//Perhitungan nilai Nitrous Oxide
-		double nitrous = koef[0] + h*koef[1] + t*koef[2] + u*koef[3];
-		System.out.println("Berdasarkan data tersebut, didapatkan nilai Nitrous Oxide sebesar " + df.format(nitrous));  
+		// Menerima masukan user untuk nilai x1..xn 
+		System.out.println("\nUntuk mengetahui estimasi nilai y, masukkan nilai variabel peubah");
+		Scanner scan= new Scanner(System.in);  
+		double[] variabel = new double[n];
+		variabel[0] = 1;
+		for(int i=1;i<n;i++){
+			System.out.print("Nilai x"+i+": ");
+			variabel[i] = scan.nextDouble();
+		}
+
+		//Perhitungan nilai y
+		DecimalFormat dfY = new DecimalFormat("#.##");
+		double y1=0;
+		for(int i=0; i<n; i++){
+			y1 += koef[i]*variabel[i];
+		}
+		System.out.println("Berdasarkan nilai variabel peubah, didapatkan nilai y sebesar " + dfY.format(y1));  
 	
 	}  
 

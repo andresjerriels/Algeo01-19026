@@ -91,18 +91,6 @@ public class TubesAlgeo {
         System.out.println ("# Ketik '1', '2', '3', '4', '5' pada keyboard:                                                #");
     }
 
-    public static void TulisMenuBacaFile () {
-        System.out.println ("#=================================================#");
-        System.out.println ("# PEMBACAAN MATRIKS                               #");
-        System.out.println ("#-------------------------------------------------#");
-        System.out.println ("# Silakan pilih salah pilihan dibawah berikut!    #");
-        System.out.println ("#=================================================#");
-        System.out.println ("# 1. Baca dari keyboard                           #");
-        System.out.println ("# 2. Baca dari file yang sudah ada                #");
-        System.out.println ("# 3. Kembali ke MENU UTAMA                        #");
-        System.out.println ("#=================================================#");
-        System.out.print ("  Ketik '1', '2', atau '3' pada keyboard: ");
-    }
 
     public static void main(String [] args) {
         
@@ -140,11 +128,13 @@ public class TubesAlgeo {
                     A.SPLGaussJordan();
                 } else if (metode == 3){
                     //Matriks Balikan
-                    // MatriksInit Mtemp = new MatriksInit(1); 
-        	        // Matriks A = new Matriks(Mtemp.NBrsEff, Mtemp.NKolEff);
+                    MatriksInit Mtemp = new MatriksInit(1); 
+        	        Matriks A = new Matriks(Mtemp.NBrsEff, Mtemp.NKolEff);
     	
-                    // Mtemp.toMatriks(A);
-                    // A.();
+                    Mtemp.toMatriks(A);
+                    InversMatriks InversA = new InversMatriks(A);
+                    InversA.SPLInvers();
+
                 } else if(metode==4) {
                     //Kaidah Cramer
                     MatriksInit Mtemp = new MatriksInit(1); 
@@ -210,7 +200,6 @@ public class TubesAlgeo {
     	
                     Mtemp.toMatriks(A);
                     InversMatriks InversA = new InversMatriks(A);
-                    InversA.OBEMatriksInvers();
                     if (InversA.matriks.DeterminanDenganKofaktor() == 0){
                         System.out.println("Matriks tidak memiliki balikan.");
                     } else {
@@ -221,6 +210,12 @@ public class TubesAlgeo {
                     }
 
                 }
+            }else if(operasi==5){
+                //Regresi Linear Berganda
+                MatriksInit Mtemp = new MatriksInit(5); 
+        	    Matriks A = new Matriks(Mtemp.NBrsEff, Mtemp.NKolEff);
+                Mtemp.toMatriks(A);
+                A.MultipleLinearRegression();
             }else{
                 // Keluar Program
                 status = 'N';
