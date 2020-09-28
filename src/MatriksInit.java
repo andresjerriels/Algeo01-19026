@@ -25,17 +25,27 @@ public class MatriksInit {
         		if (pilihan==1) {
         			matrixInitKeyboard();
         			System.out.println ("Masukkan elemen-elemen matriks A, dengan urutan: ");
-        			System.out.println ("a11, a12, ..., a1m, a21, a22, ..., anm");
+        			System.out.println ("Masukkan elemen-elemen matriks A, dengan urutan: ");
+        			System.out.println ("a11 a12 a13 ... a1m");
+        			System.out.println ("a21 a22 a23 ... a2m");
+        			System.out.println ("...");
+        			System.out.println ("an1 an2 an3 ... anm");
                 	enterMatrix(scan, this.NBrsEff, this.NKolEff-1);
                 	System.out.println ("Masukkan elemen-elemen vektor b, dengan urutan: ");
-                	System.out.println ("b1, b2, ..., bn");
+                	System.out.println ("b1");
+                	System.out.println ("b2");
+                	System.out.println ("...");
+                	System.out.println ("bn");
                 	enterSolution(scan);
                 	inputSuccess = true;
         		}
         		else if (pilihan==2 || pilihan==3) {
         			matrixInitKeyboard2();
         			System.out.println ("Masukkan elemen-elemen matriks A, dengan urutan: ");
-        			System.out.println ("a11, a12, ..., a1m, a21, a22, ..., anm");
+        			System.out.println ("a11 a12 a13 ... a1n");
+        			System.out.println ("a21 a22 a23 ... a2n");
+        			System.out.println ("...");
+        			System.out.println ("an1 an2 an3 ... ann");
                 	enterMatrix(scan, this.NBrsEff, this.NKolEff);
                 	inputSuccess = true;
         		}
@@ -47,6 +57,17 @@ public class MatriksInit {
         			System.out.println ("x2 y2");
         			System.out.println ("...");
         			System.out.println ("xn yn");
+                	enterMatrix(scan, this.NBrsEff, this.NKolEff);
+                	inputSuccess = true;
+        		}
+        		
+        		else if (pilihan==5) {
+        			matrixInitKeyboard4();
+        			System.out.println ("Masukkan persamaan-persamaannya dalam bentuk: ");
+        			System.out.println ("y1 x11 x12 ... x1n");
+        			System.out.println ("y2 x21 x22 ... x2n");
+        			System.out.println ("...");
+        			System.out.println ("yn xn1 xn2 ... xnn");
                 	enterMatrix(scan, this.NBrsEff, this.NKolEff);
                 	inputSuccess = true;
         		}
@@ -134,6 +155,16 @@ public class MatriksInit {
 	    
 	    this.matrix = new double[NBrsEff][NKolEff];
 	}
+	
+	//Matrix initialization (entry from keyboard - versi 4) - regresi
+		public void matrixInitKeyboard4() {
+			scan = new Scanner(System.in);
+			System.out.println("Masukkan jumlah peubah (n): ");
+		    this.NBrsEff = scan.nextInt();
+		    this.NKolEff = this.NBrsEff+1;
+		    
+		    this.matrix = new double[NBrsEff][NKolEff];
+		}
 	
 	
 	//Enter Matrix Data Value
