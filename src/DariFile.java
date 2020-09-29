@@ -12,9 +12,9 @@ public class DariFile {
 
     public void BacaNamaFile() throws FileNotFoundException {
         Scanner scan = new Scanner(System.in);
-        System.out.println("Masukkan nama File berisi matriks dengan format test/nama_file.txt: ");
-        System.out.println("Nama file:");
-        this.namaFile = scan.nextLine();
+        System.out.println("Masukkan nama File berisi matriks dengan format nama_folder/nama_file.txt: ");
+        System.out.println("Contoh test_case/tc1.txt");
+        this.namaFile = "../" + scan.nextLine();
         this.file = new FileInputStream(this.namaFile);
     }
 

@@ -9,9 +9,9 @@ public class TubesAlgeo {
         System.out.println ("#=============================================================================================#");
         System.out.println ("# SELAMAT DATANG!                                                                             #");
         System.out.println ("#---------------------------------------------------------------------------------------------#");
-        System.out.println ("# Andres Jerriel Sinabutar         - 13519218                                                 #");
-        System.out.println ("# Gde Anantha Priharsena           - 13519026                                                 #");
-        System.out.println ("# Shifa Salsabiila                 - 13519106                                                 #");
+        System.out.println ("# Andres Jerriel Sinabutar           13519218                                                 #");
+        System.out.println ("# Gde Anantha Priharsena             13519026                                                 #");
+        System.out.println ("# Shifa Salsabiila                   13519106                                                 #");
         System.out.println ("#=============================================================================================#");
         System.out.println ("# Ketik 'Y' (untuk memulai program) atau Ketik 'N' (untuk keluar dari program) pada keyboard: #");
     }
@@ -49,7 +49,7 @@ public class TubesAlgeo {
         System.out.println ("# 4. Kaidah Cramer                                                                            #");
         System.out.println ("# 5. Kembali ke MENU UTAMA                                                                    #");
         System.out.println ("#=============================================================================================#");
-        System.out.println ("# Ketik '1', '2', '3', '4', atau '5' pada keyboard:                                                     #");
+        System.out.println ("# Ketik '1', '2', '3', '4', atau '5' pada keyboard:                                           #");
     }
 
     public static void MasukanMetodeSalah(){

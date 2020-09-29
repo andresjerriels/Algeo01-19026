@@ -73,7 +73,7 @@ public class Matriks {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
 		System.out.println("Contoh: solutions/SolusiSPL.txt");
-		String namafile = scan.nextLine();
+		String namafile = "../"+scan.nextLine();
 
 		try(FileOutputStream file = new FileOutputStream(namafile)) {
 			byte[] b;
@@ -324,15 +324,15 @@ public class Matriks {
 			cr--;
 		}
 
-		System.out.println ("#=================================================#");
-		System.out.println ("# PENULISAN SOLUSI INTERPOLASI                    #");
-		System.out.println ("#-------------------------------------------------#");
-		System.out.println ("# Silakan pilih salah pilihan dibawah berikut!    #");
-		System.out.println ("#=================================================#");
-		System.out.println ("# 1. Tampilkan pada layar                         #");
-		System.out.println ("# 2. Simpan dalam file      	                   #");
-		System.out.println ("#=================================================#");
-		System.out.print ("  Ketik '1' atau '2' pada keyboard: ");
+		System.out.println ("#=============================================================================================#");
+		System.out.println ("# PENULISAN SOLUSI INTERPOLASI                                                                #");
+		System.out.println ("#---------------------------------------------------------------------------------------------#");
+        System.out.println ("# Silakan pilih salah satu dari pilihan berikut!                                              #");
+        System.out.println ("#=============================================================================================#");
+        System.out.println ("# 1. Tampilkan pada layar                                                                     #");
+        System.out.println ("# 2. Simpan dalam file      	                                                              #");
+        System.out.println ("#=============================================================================================#");
+        System.out.println ("# Ketik '1' atau '2' pada keyboard:                                                           #");
 
 		String pilihan = scan.nextLine();
 		while (!pilihan.equals("1") && !pilihan.equals("2")) {
@@ -401,7 +401,7 @@ public class Matriks {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
 		System.out.println("Contoh: solutions/SolusiSPL.txt");
-		String namafile = scan.nextLine();
+		String namafile = "../"+scan.nextLine();
 		DecimalFormat df = new DecimalFormat("#.######");
 
 		try (FileOutputStream file = new FileOutputStream(namafile)) {
@@ -512,15 +512,16 @@ public class Matriks {
     //TulisSolusiSPL
     public String TulisSPLGauss() throws IOException {
         Scanner scan = new Scanner(System.in);
-        System.out.println ("#=================================================#");
-        System.out.println ("# PENULISAN SOLUSI SPL                            #");
-        System.out.println ("#-------------------------------------------------#");
-        System.out.println ("# Silakan pilih salah pilihan dibawah berikut!    #");
-        System.out.println ("#=================================================#");
-        System.out.println ("# 1. Tampilkan pada layar                         #");
-        System.out.println ("# 2. Simpan dalam file      	                   #");
-        System.out.println ("#=================================================#");
-        System.out.print ("  Ketik '1' atau '2' pada keyboard: ");
+        System.out.println ("#=============================================================================================#");
+        System.out.println ("# PENULISAN SOLUSI SPL                                                                        #");
+		System.out.println ("#---------------------------------------------------------------------------------------------#");
+        System.out.println ("# Silakan pilih salah satu dari pilihan berikut!                                              #");
+        System.out.println ("#=============================================================================================#");
+        System.out.println ("# 1. Tampilkan pada layar                                                                     #");
+        System.out.println ("# 2. Simpan dalam file      	                                                              #");
+        System.out.println ("#=============================================================================================#");
+        System.out.println ("# Ketik '1' atau '2' pada keyboard:                                                           #");
+
 
         String pilihan = scan.next();
         while (!pilihan.equals("1") && !pilihan.equals("2")){
@@ -638,8 +639,7 @@ public class Matriks {
 				Scanner scan = new Scanner(System.in);
 		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
 		        System.out.println("Contoh: solutions/SolusiSPL.txt");
-		        String namafile = scan.nextLine();
-
+				String namafile = "../"+scan.nextLine();
 				
 				try (FileOutputStream file = new FileOutputStream(namafile)) {
 		            byte[] b;
@@ -728,7 +728,7 @@ public class Matriks {
     				Scanner scan = new Scanner(System.in);
     		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
     		        System.out.println("Contoh: solutions/SolusiSPL.txt");
-    		        String namafile = scan.nextLine();
+					String namafile = "../"+scan.nextLine();
     				
     		        try (FileOutputStream file = new FileOutputStream(namafile)) {
     		            byte[] b;
@@ -847,8 +847,7 @@ public class Matriks {
     				Scanner scan = new Scanner(System.in);
     		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
     		        System.out.println("Contoh: solutions/SolusiSPL.txt");
-    		        String namafile = scan.nextLine();
-
+					String namafile = "../"+scan.nextLine();
     				
     				try (FileOutputStream file = new FileOutputStream(namafile)) {
     		            byte[] b;
@@ -910,9 +909,8 @@ public class Matriks {
 				Scanner scan = new Scanner(System.in);
 		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
 		        System.out.println("Contoh: solutions/SolusiSPL.txt");
-		        String namafile = scan.nextLine();
+				String namafile = "../"+scan.nextLine();
 
-				
 				try (FileOutputStream file = new FileOutputStream(namafile)) {
 		            byte[] b;
 		            String s =("SPL ini tidak memiliki solusi.\n");
@@ -1000,7 +998,7 @@ public class Matriks {
     				Scanner scan = new Scanner(System.in);
     		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
     		        System.out.println("Contoh: solutions/SolusiSPL.txt");
-    		        String namafile = scan.nextLine();
+					String namafile = "../"+scan.nextLine();
     				
     		        try (FileOutputStream file = new FileOutputStream(namafile)) {
     		            byte[] b;
@@ -1119,8 +1117,7 @@ public class Matriks {
     				Scanner scan = new Scanner(System.in);
     		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
     		        System.out.println("Contoh: solutions/SolusiSPL.txt");
-    		        String namafile = scan.nextLine();
-
+					String namafile = "../"+scan.nextLine();
     				
     				try (FileOutputStream file = new FileOutputStream(namafile)) {
     		            byte[] b;
@@ -1227,7 +1224,7 @@ public class Matriks {
 			// Simpan dalam file
 			Scanner sc = new Scanner(System.in);
 			System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
-			System.out.println("Contoh: solutions/SolusiDet.txt");
+			System.out.println("Contoh: solutions/SolusiSPL.txt");
 			String namafile = "../"+sc.nextLine();
 
 			try (FileOutputStream file = new FileOutputStream(namafile)) {
@@ -1445,7 +1442,7 @@ public class Matriks {
 			// Simpan dalam file
             Scanner sc = new Scanner(System.in);
             System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
-            System.out.println("Contoh: solutions/SolusiDet.txt");
+            System.out.println("Contoh: solutions/SolusiSPL.txt");
             String namafile = "../"+sc.nextLine();
 
             try (FileOutputStream file = new FileOutputStream(namafile)) {
