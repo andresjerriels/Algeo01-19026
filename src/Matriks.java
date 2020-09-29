@@ -665,6 +665,17 @@ public class Matriks {
     			int cpar = 0;
     			int cr2 = brsNotZero-1;
     			int cc2 = this.getLastIdxKol()-1;
+    			
+    			//Mecari kolom nol
+    			for (int j=0;j<this.getLastIdxKol()-1;j++) {
+    				if (this.IsKolAllZero(j)) {
+    					solutionDeclared[j] = true;
+    					solution[j][this.NKolEff-brsNotZero-1] = 1;
+						solution[j][this.NKolEff-brsNotZero+1] = cpar;
+						cpar++;
+    				}
+    			}
+    			
     			while(cpar < this.NKolEff-1-brsNotZero) {
     				cc2 = this.getLastIdxKol()-1;
     				while(cc2>=0 && cpar < this.NKolEff-1-brsNotZero) {
@@ -934,6 +945,17 @@ public class Matriks {
     			int cpar = 0;
     			int cr2 = brsNotZero-1;
     			int cc2 = this.getLastIdxKol()-1;
+    			
+    			//Mecari kolom nol
+    			for (int j=0;j<this.getLastIdxKol()-1;j++) {
+    				if (this.IsKolAllZero(j)) {
+    					solutionDeclared[j] = true;
+    					solution[j][this.NKolEff-brsNotZero-1] = 1;
+						solution[j][this.NKolEff-brsNotZero+1] = cpar;
+						cpar++;
+    				}
+    			}
+    			
     			while(cpar < this.NKolEff-1-brsNotZero) {
     				cc2 = this.getLastIdxKol()-1;
     				while(cc2>=0 && cpar < this.NKolEff-1-brsNotZero) {
