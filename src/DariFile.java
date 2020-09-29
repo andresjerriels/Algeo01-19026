@@ -14,7 +14,7 @@ public class DariFile {
         Scanner scan = new Scanner(System.in);
         System.out.println("Masukkan nama File berisi matriks dengan format nama_folder/nama_file.txt: ");
         System.out.println("Contoh test_case/tc1.txt");
-        this.namaFile = "../" + scan.nextLine();
+        this.namaFile = scan.nextLine();
         this.file = new FileInputStream(this.namaFile);
     }
 
