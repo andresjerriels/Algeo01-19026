@@ -183,7 +183,7 @@ public class MatriksInit {
 	}
 	
 	//MatriksInit to Matriks
-	void toMatriks(Matriks M) {
+	public void toMatriks(Matriks M) {
 		for (int i = 0; i < this.NBrsEff; i++) {
 			for (int j = 0; j < this.NKolEff; j++) {
 				M.Elmt[i][j] = this.matrix[i][j];

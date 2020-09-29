@@ -167,7 +167,7 @@ public class InversMatriks {
         System.out.println ("# Silakan pilih salah satu dari pilihan berikut!                                              #");
         System.out.println ("#=============================================================================================#");
         System.out.println ("# 1. Tampilkan pada layar                                                                     #");
-        System.out.println ("# 2. Simpan dalam file      	                                                              #");
+        System.out.println ("# 2. Simpan dalam file      	                                                               #");
         System.out.println ("#=============================================================================================#");
         System.out.println ("# Ketik '1' atau '2' pada keyboard:                                                           #");
 

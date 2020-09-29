@@ -856,7 +856,6 @@ public class Matriks {
 		                file.write(b);
     		            for (int i=0; i<=this.getLastIdxBrs();i++) {
     		                s = ("x"+(i+1)+" = "+ df.format(solution[i])+"\n");
-    		                System.out.print(s);
     		                b = s.getBytes();
     		                file.write(b);
     		            }
@@ -1126,7 +1125,6 @@ public class Matriks {
 		                file.write(b);
     		            for (int i=0; i<=this.getLastIdxBrs();i++) {
     		                s = ("x"+(i+1)+" = "+ df.format(solution[i])+"\n");
-    		                System.out.print(s);
     		                b = s.getBytes();
     		                file.write(b);
     		            }
