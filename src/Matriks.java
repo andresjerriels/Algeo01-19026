@@ -890,7 +890,7 @@ public class Matriks {
 
 	//SPL CRAMER
 	//SPL CRAMER Dapat mengembalikan array dari detMinor/detUtama untuk digunakan dalam Multiple Linear Regression
-	public double[] SPLCramer(boolean isMLR){
+	public double[] SPLCramer(boolean isMLR) {
 		DecimalFormat df = new DecimalFormat("#.##");
 		int n = this.NBrsEff;
 		Matriks utama = new Matriks(n, n);
@@ -908,6 +908,42 @@ public class Matriks {
 		}
 		if(!isMLR){
 			// Untuk SPL Biasa
+			try {
+				TulisSPLCramer(detUtama, detMinor);
+			}catch (IOException e) {
+				// Do Nothing
+			}
+			
+		}
+
+		//Khusus Untuk Multiple Linear Regression
+		double[] solusi = new double[n];
+		for(int i=0; i<n; i++){
+			solusi[i] = detMinor[i]/detUtama;
+		}
+		return solusi;
+	}
+	
+	public static void TulisSPLCramer(double detUtama, double[] detMinor) throws IOException{
+		DecimalFormat df= new DecimalFormat("#.##");
+		int n = detMinor.length;
+		Scanner scan = new Scanner(System.in);
+		System.out.println ("#=============================================================================================#");
+		System.out.println ("# PENULISAN SOLUSI SPL DENGAN KAIDAH CRAMER                                                   #");
+		System.out.println ("#---------------------------------------------------------------------------------------------#");
+		System.out.println ("# Silakan pilih salah satu dari pilihan berikut!                                              #");
+		System.out.println ("#=============================================================================================#");
+		System.out.println ("# 1. Tampilkan pada layar                                                                     #");
+		System.out.println ("# 2. Simpan dalam file      	                                                              #");
+		System.out.println ("#=============================================================================================#");
+		System.out.println ("# Ketik '1' atau '2' pada keyboard:                                                           #");
+
+		int pilihan = scan.nextInt();
+		while (pilihan<1 || pilihan>2){
+			System.out.println("Masukan Anda salah. Silakan ulangi kembali.");
+			pilihan = scan.nextInt();
+		}
+		if (pilihan==1) {
 			if(detUtama==0){
 				boolean isAllDetZero = true;
 				int i=0;
@@ -929,14 +965,51 @@ public class Matriks {
 					System.out.print("x"+(i+1)+" = "+ df.format(detMinor[i]/detUtama)+"\n");
 				}
 			}
-		}
+		} else {
+			// Simpan dalam file
+			Scanner sc = new Scanner(System.in);
+			System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
+			System.out.println("Contoh: solutions/SolusiDet.txt");
+			String namafile = "../"+sc.nextLine();
 
-		//Khusus Untuk Multiple Linear Regression
-		double[] solusi = new double[n];
-		for(int i=0; i<n; i++){
-			solusi[i] = detMinor[i]/detUtama;
+			try (FileOutputStream file = new FileOutputStream(namafile)) {
+				byte[] b;
+				if(detUtama==0){
+					boolean isAllDetZero = true;
+					int i=0;
+					while(i<n && isAllDetZero){
+						if(detMinor[i]!=0){
+							isAllDetZero = false;
+						}else{
+							i+=1;
+						}
+					}
+					if(isAllDetZero){
+						String s = "Solusi SPL tidak dapat dicari dengan metode cramer, karena SPL ini memiliki banyak solusi.\n";
+						System.out.print(s);
+						b = s.getBytes();
+						file.write(b);
+						System.out.println("Hasil perhitungan SPL dengan kaidah cramer berhasil disimpan kedalam file");
+					} else{
+						String s = "SPL ini tidak memiliki solusi.\n";
+						System.out.print(s);
+						b = s.getBytes();
+						file.write(b);
+						System.out.println("Hasil perhitungan SPL dengan kaidah cramer berhasil disimpan kedalam file");
+					}
+				} else{
+					System.out.println("SPL ini memiliki solusi unik, yaitu:");
+					for (int i = 0; i <n; i++) {
+						String s = ("x" + (i + 1) + " = " + df.format(detMinor[i]/detUtama) + "\n");
+						System.out.print(s);
+						b = s.getBytes();
+						file.write(b);
+					}
+					System.out.println("Hasil perhitungan SPL dengan kaidah berhasil disimpan kedalam file");
+				}
+			}
 		}
-		return solusi;
+	
 	}
 
     //Determinan OBE
@@ -1011,7 +1084,7 @@ public class Matriks {
 	}
 
 	// Multiple Linear Regression
-	public void MultipleLinearRegression(){
+	public void MultipleLinearRegression() throws IOException{
 		//Preparation: Membuat SPL dari Tabel Data dengan Normal Estimation Equation for Multiple Linear Regression
 		int x = this.NKolEff+1;
 		int y = this.NKolEff;
@@ -1027,25 +1100,6 @@ public class Matriks {
 		koef = spl.SPLCramer(true);
 		int n = koef.length;
 
-		//Print persamaan
-		DecimalFormat eq = new DecimalFormat("#.#####");
-		System.out.println("\nBerikut adalah persamaan yang didapatkan dengan Multiple Linear Regression:");
-		System.out.print("y = ");
-		for(int i=0; i<n; i++){
-			if(i==0){
-				System.out.print(eq.format(koef[i]));
-			} else{
-				if(koef[i]>0){
-					System.out.print(" + "+eq.format(koef[i])+" x"+i);
-				} else if (koef[i]<0){
-					System.out.print(" - "+eq.format(Math.abs(koef[i]))+" x"+i);
-				} else{
-					continue;
-				}
-			}
-		}
-		System.out.print("\n");
-
 		// Menerima masukan user untuk nilai x1..xn 
 		System.out.println("\nUntuk mengetahui estimasi nilai y, masukkan nilai variabel peubah");
 		Scanner scan= new Scanner(System.in);  
@@ -1056,14 +1110,98 @@ public class Matriks {
 			variabel[i] = scan.nextDouble();
 		}
 
-		//Perhitungan nilai y
-		DecimalFormat dfY = new DecimalFormat("#.##");
-		double y1=0;
-		for(int i=0; i<n; i++){
-			y1 += koef[i]*variabel[i];
+        System.out.println ("#=============================================================================================#");
+        System.out.println ("# PENULISAN PERSAMAAN REGRESI DAN TAKSIRAN NILAI FUNGSI TERHADAP X YANG DIBERIKAN             #");
+        System.out.println ("#---------------------------------------------------------------------------------------------#");
+        System.out.println ("# Silakan pilih salah satu dari pilihan berikut!                                              #");
+        System.out.println ("#=============================================================================================#");
+        System.out.println ("# 1. Tampilkan pada layar                                                                     #");
+        System.out.println ("# 2. Simpan dalam file      	                                                              #");
+        System.out.println ("#=============================================================================================#");
+        System.out.println ("# Ketik '1' atau '2' pada keyboard:                                                           #");
+
+        int pilihan = scan.nextInt();
+        while (pilihan<1 || pilihan>2){
+            System.out.println("Masukan Anda salah. Silakan ulangi kembali.");
+            pilihan = scan.nextInt();
 		}
-		System.out.println("Berdasarkan nilai variabel peubah, didapatkan nilai y sebesar " + dfY.format(y1));  
-	
+		if(pilihan ==1 ){
+			//Print persamaan
+			DecimalFormat eq = new DecimalFormat("#.#####");
+			System.out.println("\nBerikut adalah persamaan yang didapatkan dengan Regresi Linear Berganda:");
+			String equation = "y = ";
+			
+			for(int i=0; i<n; i++){
+				if(i==0){
+					equation += eq.format(koef[i]);
+				} else{
+					if(koef[i]>0){
+						equation += " + "+eq.format(koef[i])+" x"+i;
+					} else if (koef[i]<0){
+						equation += " - "+eq.format(Math.abs(koef[i]))+" x"+i;
+					} else{
+						continue;
+					}
+				}
+			}
+			System.out.println(equation);
+
+			//Perhitungan nilai y
+			DecimalFormat dfY = new DecimalFormat("#.##");
+			double y1=0;
+			for(int i=0; i<n; i++){
+				y1 += koef[i]*variabel[i];
+			}
+			System.out.println("Berdasarkan nilai variabel peubah, didapatkan nilai y sebesar " + dfY.format(y1));  
+		
+		}else {
+			
+			//Print persamaan
+			DecimalFormat eq = new DecimalFormat("#.#####");
+			String final1 = "Berikut adalah persamaan yang didapatkan dengan Multiple Linear Regression:\n";
+			String equation = "y = ";
+			
+			for(int i=0; i<n; i++){
+				if(i==0){
+					equation += eq.format(koef[i]);
+				} else{
+					if(koef[i]>0){
+						equation += " + "+eq.format(koef[i])+" x"+i;
+					} else if (koef[i]<0){
+						equation += " - "+eq.format(Math.abs(koef[i]))+" x"+i;
+					} else{
+						continue;
+					}
+				}
+			}
+			equation += "\n";	
+			
+			//Perhitungan nilai y
+			DecimalFormat dfY = new DecimalFormat("#.##");
+			double y1=0;
+			for(int i=0; i<n; i++){
+				y1 += koef[i]*variabel[i];
+			}
+			String final2 = "Berdasarkan nilai variabel peubah, didapatkan nilai y sebesar " + dfY.format(y1)+"\n";  
+			
+			// Simpan dalam file
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
+            System.out.println("Contoh: solutions/SolusiDet.txt");
+            String namafile = "../"+sc.nextLine();
+
+            try (FileOutputStream file = new FileOutputStream(namafile)) {
+				byte[] b;
+				String final3 =final1+equation+final2;
+                System.out.print(final3);
+                b = final3.getBytes();
+				file.write(b);
+				
+                System.out.println("Persamaan Regresi dan Taksiran Nilai Fungsi berhasil disimpan kedalam file");
+            }
+			
+		}
+		
 	}  
 
 }

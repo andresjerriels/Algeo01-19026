@@ -1,8 +1,9 @@
 import java.io.IOException;
 import java.util.Scanner;
+import java.io.FileOutputStream;
+import java.text.DecimalFormat;
 
 public class TubesAlgeo {
-
 
     public static void TulisMenuWelcome() {
         System.out.println ("#=============================================================================================#");
@@ -92,6 +93,46 @@ public class TubesAlgeo {
         System.out.println ("# Ketik '1', '2', '3', '4', '5' pada keyboard:                                                #");
     }
 
+    public static void TulisSolusiDet(double det) throws IOException {
+        Scanner scan = new Scanner(System.in);
+        System.out.println ("#=============================================================================================#");
+        System.out.println ("# PENULISAN SOLUSI DETERMINAN                                                                 #");
+        System.out.println ("#---------------------------------------------------------------------------------------------#");
+        System.out.println ("# Silakan pilih salah satu dari pilihan berikut!                                              #");
+        System.out.println ("#=============================================================================================#");
+        System.out.println ("# 1. Tampilkan pada layar                                                                     #");
+        System.out.println ("# 2. Simpan dalam file      	                                                              #");
+        System.out.println ("#=============================================================================================#");
+        System.out.println ("# Ketik '1' atau '2' pada keyboard:                                                           #");
+
+        int pilihan = scan.nextInt();
+        while (pilihan<1 || pilihan>2){
+            System.out.println("Masukan Anda salah. Silakan ulangi kembali.");
+            pilihan = scan.nextInt();
+        }
+        DecimalFormat df = new DecimalFormat("#.##");
+        if (pilihan==1) {
+            System.out.println("Determinan matriks A adalah "+ df.format(det));
+        } else {
+            // Simpan dalam file
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
+            System.out.println("Contoh: solutions/SolusiDet.txt");
+            String namafile = "../"+sc.nextLine();
+
+            try (FileOutputStream file = new FileOutputStream(namafile)) {
+                byte[] b;
+                String s = ("Determinan matriks A adalah "+ df.format(det)+"\n");
+                System.out.print(s);
+                b = s.getBytes();
+                file.write(b);
+                System.out.println("Hasil perhitungan determinan berhasil disimpan kedalam file");
+            }
+        }
+
+    }
+
+
 
     public static void main(String [] args) throws IOException {
         
@@ -162,7 +203,7 @@ public class TubesAlgeo {
     	
                     Mtemp.toMatriks(A);
                     double determinan = A.DeterminanOBE();
-                    System.out.println("Determinan matriks A adalah "+ determinan);
+                    TulisSolusiDet(determinan);
                 } else if (metode == 2){
                     // Metode Ekspansi Kofaktor 
                     MatriksInit Mtemp = new MatriksInit(2); 
@@ -170,7 +211,7 @@ public class TubesAlgeo {
     	
                     Mtemp.toMatriks(A);
                     double determinan = A.DeterminanDenganKofaktor();
-                    System.out.println("Determinan matriks A adalah "+ determinan);
+                    TulisSolusiDet(determinan);
                 } // else, metode==3 membuat program kembali ke menu utama
 
             } else if(operasi==3){

@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.Scanner;
 
+
 public class DariFile {
     public FileInputStream file;
     public String namaFile;

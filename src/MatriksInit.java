@@ -159,8 +159,9 @@ public class MatriksInit {
 		public void matrixInitKeyboard4() {
 			scan = new Scanner(System.in);
 			System.out.println("Masukkan jumlah peubah (n): ");
+			this.NKolEff = scan.nextInt()+1;
+			System.out.println("Masukkan banyaknya data (i): ");
 		    this.NBrsEff = scan.nextInt();
-		    this.NKolEff = this.NBrsEff+1;
 		    
 		    this.matrix = new double[NBrsEff][NKolEff];
 		}

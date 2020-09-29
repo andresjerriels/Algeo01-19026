@@ -1,0 +1,3 @@
+Berikut adalah persamaan yang didapatkan dengan Multiple Linear Regression:
+y = -3.50778 - 0.00262 x1 + 0.0008 x2 + 0.15416 x3
+Berdasarkan nilai variabel peubah, didapatkan nilai y sebesar 0.94
