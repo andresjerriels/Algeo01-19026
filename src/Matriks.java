@@ -508,6 +508,29 @@ public class Matriks {
             }
         }
 	}
+    
+    //TulisSolusiSPL
+    public String TulisSPLGauss() throws IOException {
+        Scanner scan = new Scanner(System.in);
+        System.out.println ("#=================================================#");
+        System.out.println ("# PENULISAN SOLUSI SPL                            #");
+        System.out.println ("#-------------------------------------------------#");
+        System.out.println ("# Silakan pilih salah pilihan dibawah berikut!    #");
+        System.out.println ("#=================================================#");
+        System.out.println ("# 1. Tampilkan pada layar                         #");
+        System.out.println ("# 2. Simpan dalam file      	                   #");
+        System.out.println ("#=================================================#");
+        System.out.print ("  Ketik '1' atau '2' pada keyboard: ");
+
+        String pilihan = scan.next();
+        while (!pilihan.equals("1") && !pilihan.equals("2")){
+            System.out.println("Masukan Anda salah. Silakan ulangi kembali.");
+            pilihan = scan.next();
+        }
+        return pilihan;
+        
+
+    }
 	
 	//Untuk Multiple Linear Regression
 	//Jumlah Perkalian 2 Kolom
@@ -578,7 +601,7 @@ public class Matriks {
     //=====================MAIN OPERATIONS=======================
     
     //SPL Gauss
-    public void SPLGauss() {
+    public void SPLGauss() throws IOException {
     	DecimalFormat df = new DecimalFormat("#.##");
     	int brsNotZero = 0;
     	int cr = this.getLastIdxBrs();
@@ -609,7 +632,25 @@ public class Matriks {
     	
     	//KASUS 1: HAS NO SOLUTION
     	if (!hasSolution) {
+    		String printMode = this.TulisSPLGauss();   
+    		
+    		if (printMode.equals("2")) {
+				Scanner scan = new Scanner(System.in);
+		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
+		        System.out.println("Contoh: solutions/SolusiSPL.txt");
+		        String namafile = scan.nextLine();
+
+				
+				try (FileOutputStream file = new FileOutputStream(namafile)) {
+		            byte[] b;
+		            String s =("SPL ini tidak memiliki solusi.\n");
+		            b = s.getBytes();
+	                file.write(b);
+		        }
+			}
+    		
     		System.out.println("SPL ini tidak memiliki solusi.");
+    		
     	} else {
     		//KASUS 2: INFINITELY MANY SOLUTION
     		if (brsNotZero<this.NKolEff-1) {
@@ -679,7 +720,79 @@ public class Matriks {
     				
     			}
     			
-    			char[] variables = {'r','s','t','u','v','w','x','y','z'}; 
+    			String[] variables = {"r","s","t","u","v","w","x","y","z"}; 
+    			String printMode = this.TulisSPLGauss();   
+    			
+    			
+    			if (printMode.equals("2")) {
+    				Scanner scan = new Scanner(System.in);
+    		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
+    		        System.out.println("Contoh: solutions/SolusiSPL.txt");
+    		        String namafile = scan.nextLine();
+    				
+    		        try (FileOutputStream file = new FileOutputStream(namafile)) {
+    		            byte[] b;
+    		            String s =("SPL ini memiliki solusi banyak, yang mengikuti:\n");
+    		            b = s.getBytes();
+		                file.write(b);
+		                for (int i = this.IdxBrsMin; i <= this.getLastIdxKol()-1; i++) {
+    		            	if(solution[i][this.NKolEff-brsNotZero-1]==0 && solution[i][this.NKolEff-brsNotZero]==0) {
+    	    					s = ("x"+(i+1)+" = ");
+    	    					b = s.getBytes();
+    			                file.write(b);
+    	    					if (solution[i][this.NKolEff-brsNotZero+2]!=0) {
+    	    						s = (df.format(solution[i][this.NKolEff-brsNotZero+2]));
+    	    						b = s.getBytes();
+    	    		                file.write(b);
+    	    					}
+    							for (int j=0;j<=cpar-1;j++) {
+    								int cOutput = 0;
+    								if (solution[i][j]!=0) {
+    									if (-(solution[i][j])>0 && (cOutput!=0 || solution[i][this.NKolEff-brsNotZero+2]!=0)){
+    										s = ("+");
+    										b = s.getBytes();
+    						                file.write(b);
+    									}
+    									if (-(solution[i][j])==-1){
+    										s = ("-");
+    										b = s.getBytes();
+    						                file.write(b);
+    									}
+    									if (Math.abs(solution[i][j])!=1) {
+    										s = (df.format(-(solution[i][j])));
+    										b = s.getBytes();
+    						                file.write(b);
+    									}
+    									s = (variables[j]);
+    									b = s.getBytes();
+    					                file.write(b);
+    									cOutput++;
+    								}
+    							}
+    							s = ("\n");
+    							b = s.getBytes();
+    			                file.write(b);
+    						} else if (solution[i][this.NKolEff-brsNotZero-1]==1 && solution[i][this.NKolEff-brsNotZero]==0) {
+    							s = ("x"+(i+1)+" = "+variables[(int)solution[i][this.NKolEff-brsNotZero+1]]);
+    							b = s.getBytes();
+    			                file.write(b);
+    			                s = ("\n");
+    							b = s.getBytes();
+    			                file.write(b);
+    						} else {
+    							s = ("x"+(i+1)+" = "+df.format(solution[i][this.NKolEff-brsNotZero+2]));
+    							b = s.getBytes();
+    			                file.write(b);
+    			                s = ("\n");
+    							b = s.getBytes();
+    			                file.write(b);
+    							
+    						}
+    		            }
+    		        }
+    		        
+    			}
+    			
     			System.out.println("SPL ini memiliki solusi banyak, yang mengikuti:");
     			for (int i = this.IdxBrsMin; i <= this.getLastIdxKol()-1; i++) {
     				if(solution[i][this.NKolEff-brsNotZero-1]==0 && solution[i][this.NKolEff-brsNotZero]==0) {
@@ -720,7 +833,8 @@ public class Matriks {
     		} 
     		//KASUS 3: UNIQUE SOLUTION
     		else {
-    			System.out.println("SPL ini memiliki solusi unik, yaitu:");
+    			String printMode = this.TulisSPLGauss();    			
+    			
     	        double[] solution = new double[this.NBrsEff];
     	        for (int i = this.getLastIdxBrs(); i >= 0;i--) {
     	            double sum = 0.0;
@@ -728,16 +842,38 @@ public class Matriks {
     	                sum += this.Elmt[i][j] * solution[j];
     	            solution[i] = (this.Elmt[i][this.getLastIdxKol()] - sum);
     	        }     
+    	        
+    	        if (printMode.equals("2")) {
+    				Scanner scan = new Scanner(System.in);
+    		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
+    		        System.out.println("Contoh: solutions/SolusiSPL.txt");
+    		        String namafile = scan.nextLine();
+
+    				
+    				try (FileOutputStream file = new FileOutputStream(namafile)) {
+    		            byte[] b;
+    		            String s =("SPL ini memiliki solusi unik, yaitu:\n");
+    		            b = s.getBytes();
+		                file.write(b);
+    		            for (int i=0; i<=this.getLastIdxBrs();i++) {
+    		                s = ("x"+(i+1)+" = "+ df.format(solution[i])+"\n");
+    		                System.out.print(s);
+    		                b = s.getBytes();
+    		                file.write(b);
+    		            }
+    		        }
+    			}
+    	        
+    	        System.out.println("SPL ini memiliki solusi unik, yaitu:");
     	        for (int i=0; i<=this.getLastIdxBrs();i++) {
     				System.out.print("x"+(i+1)+" = "+ df.format(solution[i])+"\n");
     			}
-    	        
     		}
     	}
     }
     
     //SPL Gauss Jordan
-    public void SPLGaussJordan() {
+    public void SPLGaussJordan() throws IOException {
     	DecimalFormat df = new DecimalFormat("#.##");
     	int brsNotZero = 0;
     	int cr = this.getLastIdxBrs();
@@ -768,7 +904,25 @@ public class Matriks {
     	
     	//KASUS 1: HAS NO SOLUTION
     	if (!hasSolution) {
+    		String printMode = this.TulisSPLGauss();   
+    		
+    		if (printMode.equals("2")) {
+				Scanner scan = new Scanner(System.in);
+		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
+		        System.out.println("Contoh: solutions/SolusiSPL.txt");
+		        String namafile = scan.nextLine();
+
+				
+				try (FileOutputStream file = new FileOutputStream(namafile)) {
+		            byte[] b;
+		            String s =("SPL ini tidak memiliki solusi.\n");
+		            b = s.getBytes();
+	                file.write(b);
+		        }
+			}
+    		
     		System.out.println("SPL ini tidak memiliki solusi.");
+    		
     	} else {
     		//KASUS 2: INFINITELY MANY SOLUTION
     		if (brsNotZero<this.NKolEff-1) {
@@ -794,7 +948,7 @@ public class Matriks {
             					solution[cc2][this.NKolEff-brsNotZero+2] = this.Elmt[cr2][this.getLastIdxKol()]/this.Elmt[cr2][cc2];
             					
             				}
-        					else if(cc2!=Kolom1Utama(cr2)) {
+        					else if(cc2!=Kolom1Utama(cr2) && IsKolZeroFromCr(cr2+1,cc2)) {
         						solutionDeclared[cc2]=true;
         						solution[cc2][this.NKolEff-brsNotZero-1] = 1;
         						solution[cc2][this.NKolEff-brsNotZero+1] = cpar;
@@ -817,17 +971,18 @@ public class Matriks {
     				if(solutionDeclared[cc2]==false) {
     					solutionDeclared[cc2]=true;
     					solution[cc2][this.NKolEff-brsNotZero+2] = this.Elmt[i][this.getLastIdxKol()];
-    					for (int k=cc2+1;k<=this.getLastIdxKol()-1;k++) {
+    					for (int k=this.getLastIdxKol()-1;k>=cc2+1;k--) {
     						if(solution[k][this.NKolEff-brsNotZero-1]==0 && solution[k][this.NKolEff-brsNotZero]==0) {
     							for (int j=0;j<=cpar-1;j++) {
-    								solution[cc2][j] += solution[k][j]*-(this.Elmt[i][k]);	
+    								solution[cc2][j] += solution[k][j]*-(this.Elmt[i][k]);
     							}
+    							solution[cc2][this.NKolEff-brsNotZero+2] += solution[k][this.NKolEff-brsNotZero+2]*-(this.Elmt[i][k]);
         					}
     						else if (solution[k][this.NKolEff-brsNotZero-1]==1 && solution[k][this.NKolEff-brsNotZero]==0) {
     							solution[cc2][(int)solution[k][this.NKolEff-brsNotZero+1]] += this.Elmt[i][k];
     						}
     						else {
-    							solution[cc2][this.NKolEff-brsNotZero+2] -= solution[cc2][(int)solution[k][this.NKolEff-brsNotZero+2]]*this.Elmt[i][k];	
+    							solution[cc2][this.NKolEff-brsNotZero+2] -= solution[k][this.NKolEff-brsNotZero+2]*this.Elmt[i][k];	
     							
     						}
     						
@@ -837,7 +992,79 @@ public class Matriks {
     				
     			}
     			
-    			char[] variables = {'r','s','t','u','v','w','x','y','z'}; 
+    			String[] variables = {"r","s","t","u","v","w","x","y","z"}; 
+    			String printMode = this.TulisSPLGauss();   
+    			
+    			
+    			if (printMode.equals("2")) {
+    				Scanner scan = new Scanner(System.in);
+    		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
+    		        System.out.println("Contoh: solutions/SolusiSPL.txt");
+    		        String namafile = scan.nextLine();
+    				
+    		        try (FileOutputStream file = new FileOutputStream(namafile)) {
+    		            byte[] b;
+    		            String s =("SPL ini memiliki solusi banyak, yang mengikuti:\n");
+    		            b = s.getBytes();
+		                file.write(b);
+		                for (int i = this.IdxBrsMin; i <= this.getLastIdxKol()-1; i++) {
+    		            	if(solution[i][this.NKolEff-brsNotZero-1]==0 && solution[i][this.NKolEff-brsNotZero]==0) {
+    	    					s = ("x"+(i+1)+" = ");
+    	    					b = s.getBytes();
+    			                file.write(b);
+    	    					if (solution[i][this.NKolEff-brsNotZero+2]!=0) {
+    	    						s = (df.format(solution[i][this.NKolEff-brsNotZero+2]));
+    	    						b = s.getBytes();
+    	    		                file.write(b);
+    	    					}
+    							for (int j=0;j<=cpar-1;j++) {
+    								int cOutput = 0;
+    								if (solution[i][j]!=0) {
+    									if (-(solution[i][j])>0 && (cOutput!=0 || solution[i][this.NKolEff-brsNotZero+2]!=0)){
+    										s = ("+");
+    										b = s.getBytes();
+    						                file.write(b);
+    									}
+    									if (-(solution[i][j])==-1){
+    										s = ("-");
+    										b = s.getBytes();
+    						                file.write(b);
+    									}
+    									if (Math.abs(solution[i][j])!=1) {
+    										s = (df.format(-(solution[i][j])));
+    										b = s.getBytes();
+    						                file.write(b);
+    									}
+    									s = (variables[j]);
+    									b = s.getBytes();
+    					                file.write(b);
+    									cOutput++;
+    								}
+    							}
+    							s = ("\n");
+    							b = s.getBytes();
+    			                file.write(b);
+    						} else if (solution[i][this.NKolEff-brsNotZero-1]==1 && solution[i][this.NKolEff-brsNotZero]==0) {
+    							s = ("x"+(i+1)+" = "+variables[(int)solution[i][this.NKolEff-brsNotZero+1]]);
+    							b = s.getBytes();
+    			                file.write(b);
+    			                s = ("\n");
+    							b = s.getBytes();
+    			                file.write(b);
+    						} else {
+    							s = ("x"+(i+1)+" = "+df.format(solution[i][this.NKolEff-brsNotZero+2]));
+    							b = s.getBytes();
+    			                file.write(b);
+    			                s = ("\n");
+    							b = s.getBytes();
+    			                file.write(b);
+    							
+    						}
+    		            }
+    		        }
+    		        
+    			}
+    			
     			System.out.println("SPL ini memiliki solusi banyak, yang mengikuti:");
     			for (int i = this.IdxBrsMin; i <= this.getLastIdxKol()-1; i++) {
     				if(solution[i][this.NKolEff-brsNotZero-1]==0 && solution[i][this.NKolEff-brsNotZero]==0) {
@@ -878,9 +1105,40 @@ public class Matriks {
     		} 
     		//KASUS 3: UNIQUE SOLUTION
     		else {
-    			System.out.println("SPL ini memiliki solusi unik, yaitu:");
-    			for (int i=0; i<=this.getLastIdxBrs();i++) {
-    				System.out.print("x"+(i+1)+" = "+ df.format(this.Elmt[i][this.getLastIdxKol()])+"\n");
+    			String printMode = this.TulisSPLGauss();    			
+    			
+    	        double[] solution = new double[this.NBrsEff];
+    	        for (int i = this.getLastIdxBrs(); i >= 0;i--) {
+    	            double sum = 0.0;
+    	            for (int j = i + 1; j < this.getLastIdxKol(); j++) 
+    	                sum += this.Elmt[i][j] * solution[j];
+    	            solution[i] = (this.Elmt[i][this.getLastIdxKol()] - sum);
+    	        }     
+    	        
+    	        if (printMode.equals("2")) {
+    				Scanner scan = new Scanner(System.in);
+    		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
+    		        System.out.println("Contoh: solutions/SolusiSPL.txt");
+    		        String namafile = scan.nextLine();
+
+    				
+    				try (FileOutputStream file = new FileOutputStream(namafile)) {
+    		            byte[] b;
+    		            String s =("SPL ini memiliki solusi unik, yaitu:\n");
+    		            b = s.getBytes();
+		                file.write(b);
+    		            for (int i=0; i<=this.getLastIdxBrs();i++) {
+    		                s = ("x"+(i+1)+" = "+ df.format(solution[i])+"\n");
+    		                System.out.print(s);
+    		                b = s.getBytes();
+    		                file.write(b);
+    		            }
+    		        }
+    			}
+    	        
+    	        System.out.println("SPL ini memiliki solusi unik, yaitu:");
+    	        for (int i=0; i<=this.getLastIdxBrs();i++) {
+    				System.out.print("x"+(i+1)+" = "+ df.format(solution[i])+"\n");
     			}
     		}
     	}
@@ -934,7 +1192,7 @@ public class Matriks {
 		System.out.println ("# Silakan pilih salah satu dari pilihan berikut!                                              #");
 		System.out.println ("#=============================================================================================#");
 		System.out.println ("# 1. Tampilkan pada layar                                                                     #");
-		System.out.println ("# 2. Simpan dalam file      	                                                              #");
+		System.out.println ("# 2. Simpan dalam file      	                                                               #");
 		System.out.println ("#=============================================================================================#");
 		System.out.println ("# Ketik '1' atau '2' pada keyboard:                                                           #");
 
