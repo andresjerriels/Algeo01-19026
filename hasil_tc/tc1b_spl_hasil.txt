@@ -1,0 +1,6 @@
+SPL ini memiliki solusi banyak, yang mengikuti:
+x1 = 3+s
+x2 = 2s
+x3 = r
+x4 = -1+s
+x5 = s
