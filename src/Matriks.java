@@ -370,15 +370,31 @@ public class Matriks {
 						}
 					} else if (i == 1) {
 						if (this.Elmt[i][this.getLastIdxKol()] > 1e-9) {
-							System.out.print(" + " + df.format(this.Elmt[i][this.getLastIdxKol()]) + "x");
+							if (this.Elmt[i][this.getLastIdxKol()] == 1) {
+								System.out.print(" + " + "x");
+							} else {
+								System.out.print(" + " + df.format(this.Elmt[i][this.getLastIdxKol()]) + "x");
+							}
 						} else if (this.Elmt[i][this.getLastIdxKol()] < -1e-9) {
-							System.out.print(" - " + df.format(Math.abs(this.Elmt[i][this.getLastIdxKol()])) + "x");
+							if (this.Elmt[i][this.getLastIdxKol()] == -1) {
+								System.out.print(" - " + "x");
+							} else {
+								System.out.print(" - " + df.format(Math.abs(this.Elmt[i][this.getLastIdxKol()])) + "x");
+							}
 						}
 					} else {
 						if (this.Elmt[i][this.getLastIdxKol()] > 1e-9) {
-							System.out.print(" + " + df.format(this.Elmt[i][this.getLastIdxKol()]) + "x^" + i);
+							if (this.Elmt[i][this.getLastIdxKol()] == 1) {
+								System.out.print(" + " + "x^" + i);
+							} else {
+								System.out.print(" + " + df.format(this.Elmt[i][this.getLastIdxKol()]) + "x^" + i);
+							}
 						} else if (this.Elmt[i][this.getLastIdxKol()] < -1e-9) {
-							System.out.print(" - " + df.format(Math.abs(this.Elmt[i][this.getLastIdxKol()])) + "x^" + i);
+							if (this.Elmt[i][this.getLastIdxKol()] == -1) {
+								System.out.print(" - " + "x^" + i);
+							} else {
+								System.out.print(" - " + df.format(Math.abs(this.Elmt[i][this.getLastIdxKol()])) + "x^" + i);
+							}
 						}
 					}
 				}
@@ -446,24 +462,44 @@ public class Matriks {
 							}
 						} else if (i == 1) {
 							if (this.Elmt[i][this.getLastIdxKol()] > 1e-9) {
-								String sb1 = " + " + df.format(this.Elmt[i][this.getLastIdxKol()]) + "x";
+								String sb1;
+								if (this.Elmt[i][this.getLastIdxKol()] == 1) {
+									sb1 = " + " + "x";
+								} else {
+									sb1 = " + " + df.format(this.Elmt[i][this.getLastIdxKol()]) + "x";
+								}
 								System.out.print(sb1);
 								b = sb1.getBytes();
 								file.write(b);
 							} else if (this.Elmt[i][this.getLastIdxKol()] < -1e-9) {
-								String sb2 = " - " + df.format(Math.abs(this.Elmt[i][this.getLastIdxKol()])) + "x";
+								String sb2;
+								if (this.Elmt[i][this.getLastIdxKol()] == -1) {
+									sb2 = " - " + "x";
+								} else {
+									sb2 = " - " + df.format(Math.abs(this.Elmt[i][this.getLastIdxKol()])) + "x";
+								}
 								System.out.print(sb2);
 								b = sb2.getBytes();
 								file.write(b);
 							}
 						} else {
 							if (this.Elmt[i][this.getLastIdxKol()] > 1e-9) {
-								String sc1 = " + " + df.format(this.Elmt[i][this.getLastIdxKol()]) + "x^" + i;
+								String sc1;
+								if (this.Elmt[i][this.getLastIdxKol()] == 1) {
+									sc1 = " + " + "x^" + i;
+								} else {
+									sc1 = " + " + df.format(this.Elmt[i][this.getLastIdxKol()]) + "x^" + i;
+								}
 								System.out.print(sc1);
 								b = sc1.getBytes();
 								file.write(b);
 							} else if (this.Elmt[i][this.getLastIdxKol()] < -1e-9) {
-								String sc2 = " - " + df.format(Math.abs(this.Elmt[i][this.getLastIdxKol()])) + "x^" + i;
+								String sc2;
+								if (this.Elmt[i][this.getLastIdxKol()] == -1) {
+									sc2 = " - " + "x^" + i;
+								} else {
+									sc2 = " - " + df.format(Math.abs(this.Elmt[i][this.getLastIdxKol()])) + "x^" + i;
+								}
 								System.out.print(sc2);
 								b = sc2.getBytes();
 								file.write(b);
