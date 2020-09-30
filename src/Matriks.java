@@ -651,23 +651,24 @@ public class Matriks {
     	DecimalFormat df = new DecimalFormat("#.##");
     	int brsNotZero = 0;
     	int cr = this.getLastIdxBrs();
-    	boolean hasSolution = true;
+    	boolean hasSolution = true; //Variabel penanda apakah solusi SPL ada
     	
-    	//PREPARATION
-    	EliminasiGauss();
+    	EliminasiGauss(); //Mengubah matriks ke bentuk matriks eselon
     	while (hasSolution && cr>=0) {
     		int cc = 0;
     		boolean rowAllZero = true;
-    	    		
+    	    
+    		//Proses pengecekan apakah elemen sebuah baris pada matriks A bernilai nol semua
     		for (int j=0; j<=this.getLastIdxKol()-1;j++) {
     			if (this.Elmt[cr][j]!=0) {
     				rowAllZero = false;
     			}
     		}
     		
+    		//Mengecek elemen pada matriks b yang bersangkutan apabila ditemukan sebuah baris nol
     		if (rowAllZero) {
     			if (this.Elmt[cr][this.getLastIdxKol()]!=0) {
-    				hasSolution = false;
+    				hasSolution = false; //Deklarasi bahwa SPL tidak memilki solusi
     			} 
     		} else {
 				brsNotZero++;
@@ -676,7 +677,7 @@ public class Matriks {
     		cr--;
     	}
     	
-    	//KASUS 1: HAS NO SOLUTION
+    	//Kasus 1: Tidak mempunyai solusi
     	if (!hasSolution) {
     		String printMode = this.TulisSPLGauss();   
     		
@@ -686,6 +687,8 @@ public class Matriks {
 		        System.out.println("Contoh: solutions/SolusiSPL.txt");
 				String namafile = "../"+scan.nextLine();
 				
+				
+				//Tulis hasil ke file
 				try (FileOutputStream file = new FileOutputStream(namafile)) {
 		            byte[] b;
 		            String s =("SPL ini tidak memiliki solusi.\n");
@@ -694,24 +697,32 @@ public class Matriks {
 		        }
 			}
     		
+    		//Tulis hasil ke layar
     		System.out.println("SPL ini tidak memiliki solusi.");
     		
     	} else {
-    		//KASUS 2: INFINITELY MANY SOLUTION
+    		//Kasus 2: Solusi banyak
     		if (brsNotZero<this.NKolEff-1) {
-    			//Setting up additional matrix and array
+    			//Deklarasi array tambahan, dengan spesifikasi:
+    			//Array 2D dengan ukuran n x m (n: Jumlah variabel, jumlah persamaan efektif setelah eliminasi + 4)
+    			//4 kolom di akhir array solusi dibuat untuk menyimpan data dengan ketentuan:
+    				//Kolom 1: penanda apakah sebuah variabel dijadikan variabel parametrik atau tidak (1 jika ya, 0 jika tidak)
+    				//Kolom 2: penanda apakah sebuah variabel memiliki solusi tunggal (1 jika ya, 0 jika tidak)
+    				//Kolom 3: index variabel parametrik (variabel parametrik ke berapa), jika kolom 1 bernilai 1
+    				//Kolom 4: nilai solusi tunggal suatu variabel apabila kolom 2 bernilai 1
     			double[][] solution = new double[this.NKolEff-1][this.NKolEff-brsNotZero+3];
+    			//Array 1D berukuran jumlah variabel matriks, menjadi penanda apakah solusinya sudah dideklarasikan atau belum
     			boolean[] solutionDeclared = new boolean[this.NKolEff-1];
     			for (int i=0;i<=this.getLastIdxKol()-1;i++) {
-    				solutionDeclared[i] = false;
+    				solutionDeclared[i] = false; //Inisiasi seluruh nilai solution declared
     			}
     			    			
-    			//phase 1: pilih variabel mana saja yang akan dijadikan variabel parametrik
-    			int cpar = 0;
+    			//Menentukan variabel mana saja yang akan dijadikan variabel parametrik
+    			int cpar = 0; //Variabel yang menyimpan jumlah variabel yang harus dijadikan variabel parametrik
     			int cr2 = brsNotZero-1;
     			int cc2 = this.getLastIdxKol()-1;
     			
-    			//Mecari kolom nol
+    			//Mecari kolom nol untuk kemudian variabel terkait langsung dijadikan variabel parametrik
     			for (int j=0;j<this.getLastIdxKol()-1;j++) {
     				if (this.IsKolAllZero(j)) {
     					solutionDeclared[j] = true;
@@ -721,10 +732,13 @@ public class Matriks {
     				}
     			}
     			
+    			//Menentukan variabel lain yang akan dijadikan variabel parametrik
     			while(cpar < this.NKolEff-1-brsNotZero) {
     				cc2 = this.getLastIdxKol()-1;
     				while(cc2>=0 && cpar < this.NKolEff-1-brsNotZero) {
     					if (solutionDeclared[cc2]==false && this.Elmt[cr2][cc2]!=0) {
+    						//variabel tidak akan dijadikan variabel parametrik apabila ia memilki solusi unik atau bisa
+    						//dideklarasikan dengan variabel parametrik lainnya
         					if(ItemsInRow(cr2,this.getLastIdxKol()-1)==1){
         						
         						solutionDeclared[cc2]=true;
@@ -732,6 +746,7 @@ public class Matriks {
             					solution[cc2][this.NKolEff-brsNotZero+2] = this.Elmt[cr2][this.getLastIdxKol()]/this.Elmt[cr2][cc2];
             					
             				}
+        					//sebuah variabel dideklarasikan sebagai variabel parametrik
         					else if(cc2!=Kolom1Utama(cr2) && IsKolZeroFromCr(cr2+1,cc2)) {
         						solutionDeclared[cc2]=true;
         						solution[cc2][this.NKolEff-brsNotZero-1] = 1;
@@ -747,7 +762,7 @@ public class Matriks {
     				
     			}
     			    			
-    			//phase 2: 
+    			//Mengisi array solusi sesuai dengan jenis solusi setiap variabelnya
     			cr2 = brsNotZero-1;
     			cc2 = 0;
     			for (int i=cr2;i>=0;i--) {
@@ -756,15 +771,18 @@ public class Matriks {
     					solutionDeclared[cc2]=true;
     					solution[cc2][this.NKolEff-brsNotZero+2] = this.Elmt[i][this.getLastIdxKol()];
     					for (int k=this.getLastIdxKol()-1;k>=cc2+1;k--) {
+    						//Jenis solusi 1: bukan merupakan variabel parametrik ataupun solusi tunggal
     						if(solution[k][this.NKolEff-brsNotZero-1]==0 && solution[k][this.NKolEff-brsNotZero]==0) {
     							for (int j=0;j<=cpar-1;j++) {
     								solution[cc2][j] += solution[k][j]*-(this.Elmt[i][k]);
     							}
     							solution[cc2][this.NKolEff-brsNotZero+2] += solution[k][this.NKolEff-brsNotZero+2]*-(this.Elmt[i][k]);
         					}
+    						//Jenis solusi 2: Merupakan variabel parametrik
     						else if (solution[k][this.NKolEff-brsNotZero-1]==1 && solution[k][this.NKolEff-brsNotZero]==0) {
     							solution[cc2][(int)solution[k][this.NKolEff-brsNotZero+1]] += this.Elmt[i][k];
     						}
+    						//Jenis solusi 3: Memiliki solusi tunggal
     						else {
     							solution[cc2][this.NKolEff-brsNotZero+2] -= solution[k][this.NKolEff-brsNotZero+2]*this.Elmt[i][k];	
     							
@@ -776,10 +794,11 @@ public class Matriks {
     				
     			}
     			
+    			//Menuliskan hasil
     			String[] variables = {"r","s","t","u","v","w","x","y","z"}; 
     			String printMode = this.TulisSPLGauss();   
     			
-    			
+    			//Tulis hasil ke file
     			if (printMode.equals("2")) {
     				Scanner scan = new Scanner(System.in);
     		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
@@ -849,6 +868,7 @@ public class Matriks {
     		        
     			}
     			
+    			//Tulis hasil ke layar
     			System.out.println("SPL ini memiliki solusi banyak, yang mengikuti:");
     			for (int i = this.IdxBrsMin; i <= this.getLastIdxKol()-1; i++) {
     				if(solution[i][this.NKolEff-brsNotZero-1]==0 && solution[i][this.NKolEff-brsNotZero]==0) {
@@ -887,10 +907,11 @@ public class Matriks {
     			    			
     			
     		} 
-    		//KASUS 3: UNIQUE SOLUTION
+    		//Kasus 3: Solusi unik
     		else {
     			String printMode = this.TulisSPLGauss();    			
     			
+    			//Menyimpan solusi masing-masing variabel pada sebuah array
     	        double[] solution = new double[this.NKolEff];
     	        for (int i = this.getLastIdxKol()-1; i >= 0;i--) {
     	            double sum = 0.0;
@@ -899,6 +920,7 @@ public class Matriks {
     	            solution[i] = (this.Elmt[i][this.getLastIdxKol()] - sum);
     	        }     
     	        
+    	        //Tulis hasil ke file
     	        if (printMode.equals("2")) {
     				Scanner scan = new Scanner(System.in);
     		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
@@ -918,6 +940,7 @@ public class Matriks {
     		        }
     			}
     	        
+    	        //Tulis hasil ke layar
     	        System.out.println("SPL ini memiliki solusi unik, yaitu:");
     	        for (int i=0; i<=this.getLastIdxKol()-1;i++) {
     				System.out.print("x"+(i+1)+" = "+ df.format(solution[i])+"\n");
@@ -931,23 +954,25 @@ public class Matriks {
     	DecimalFormat df = new DecimalFormat("#.##");
     	int brsNotZero = 0;
     	int cr = this.getLastIdxBrs();
-    	boolean hasSolution = true;
+    	boolean hasSolution = true; //Variabel penanda apakah solusi SPL ada
     	
-    	//PREPARATION
-    	EliminasiGaussJordan();
+    	
+    	EliminasiGaussJordan(); //Mengubah matriks ke bentuk matriks eselon tereduksi
     	while (hasSolution && cr>=0) {
     		int cc = 0;
     		boolean rowAllZero = true;
-    	    		
+    	    
+    		//Proses pengecekan apakah elemen sebuah baris pada matriks A bernilai nol semua
     		for (int j=0; j<=this.getLastIdxKol()-1;j++) {
     			if (this.Elmt[cr][j]!=0) {
     				rowAllZero = false;
     			}
     		}
     		
+    		//Mengecek elemen pada matriks b yang bersangkutan apabila ditemukan sebuah baris nol
     		if (rowAllZero) {
     			if (this.Elmt[cr][this.getLastIdxKol()]!=0) {
-    				hasSolution = false;
+    				hasSolution = false; //Deklarasi bahwa SPL tidak memilki solusi
     			} 
     		} else {
 				brsNotZero++;
@@ -956,10 +981,11 @@ public class Matriks {
     		cr--;
     	}
     	
-    	//KASUS 1: HAS NO SOLUTION
+    	//Kasus 1: Tidak mempunyai solusi
     	if (!hasSolution) {
     		String printMode = this.TulisSPLGauss();   
     		
+    		//Tulis ke sebuah file
     		if (printMode.equals("2")) {
 				Scanner scan = new Scanner(System.in);
 		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
@@ -974,24 +1000,33 @@ public class Matriks {
 		        }
 			}
     		
+    		//Tulis ke layar
     		System.out.println("SPL ini tidak memiliki solusi.");
     		
     	} else {
-    		//KASUS 2: INFINITELY MANY SOLUTION
+    		//Kasus 2: Solusi banyak
     		if (brsNotZero<this.NKolEff-1) {
-    			//Setting up additional matrix and array
+    			
+    			//Deklarasi array tambahan, dengan spesifikasi:
+    			//Array 2D dengan ukuran n x m (n: Jumlah variabel, jumlah persamaan efektif setelah eliminasi + 4)
+    			//4 kolom di akhir array solusi dibuat untuk menyimpan data dengan ketentuan:
+    				//Kolom 1: penanda apakah sebuah variabel dijadikan variabel parametrik atau tidak (1 jika ya, 0 jika tidak)
+    				//Kolom 2: penanda apakah sebuah variabel memiliki solusi tunggal (1 jika ya, 0 jika tidak)
+    				//Kolom 3: index variabel parametrik (variabel parametrik ke berapa), jika kolom 1 bernilai 1
+    				//Kolom 4: nilai solusi tunggal suatu variabel apabila kolom 2 bernilai 1
     			double[][] solution = new double[this.NKolEff-1][this.NKolEff-brsNotZero+3];
+    			//Array 1D berukuran jumlah variabel matriks, menjadi penanda apakah solusinya sudah dideklarasikan atau belum
     			boolean[] solutionDeclared = new boolean[this.NKolEff-1];
     			for (int i=0;i<=this.getLastIdxKol()-1;i++) {
-    				solutionDeclared[i] = false;
+    				solutionDeclared[i] = false; //Inisiasi seluruh nilai solution declared
     			}
     			    			
-    			//phase 1: pilih variabel mana saja yang akan dijadikan variabel parametrik
-    			int cpar = 0;
+    			//Menentukan variabel mana saja yang akan dijadikan variabel parametrik
+    			int cpar = 0; //Variabel yang menyimpan jumlah variabel yang harus dijadikan variabel parametrik
     			int cr2 = brsNotZero-1;
     			int cc2 = this.getLastIdxKol()-1;
     			
-    			//Mecari kolom nol
+    			//Mecari kolom nol untuk kemudian variabel terkait langsung dijadikan variabel parametrik
     			for (int j=0;j<this.getLastIdxKol()-1;j++) {
     				if (this.IsKolAllZero(j)) {
     					solutionDeclared[j] = true;
@@ -1001,10 +1036,13 @@ public class Matriks {
     				}
     			}
     			
+    			//Menentukan variabel lain yang akan dijadikan variabel parametrik
     			while(cpar < this.NKolEff-1-brsNotZero) {
     				cc2 = this.getLastIdxKol()-1;
     				while(cc2>=0 && cpar < this.NKolEff-1-brsNotZero) {
     					if (solutionDeclared[cc2]==false && this.Elmt[cr2][cc2]!=0) {
+    						//variabel tidak akan dijadikan variabel parametrik apabila ia memilki solusi unik atau bisa
+    						//dideklarasikan dengan variabel parametrik lainnya
         					if(ItemsInRow(cr2,this.getLastIdxKol()-1)==1){
         						
         						solutionDeclared[cc2]=true;
@@ -1012,6 +1050,7 @@ public class Matriks {
             					solution[cc2][this.NKolEff-brsNotZero+2] = this.Elmt[cr2][this.getLastIdxKol()]/this.Elmt[cr2][cc2];
             					
             				}
+        					//sebuah variabel dideklarasikan sebagai variabel parametrik
         					else if(cc2!=Kolom1Utama(cr2) && IsKolZeroFromCr(cr2+1,cc2)) {
         						solutionDeclared[cc2]=true;
         						solution[cc2][this.NKolEff-brsNotZero-1] = 1;
@@ -1027,7 +1066,7 @@ public class Matriks {
     				
     			}
     			    			
-    			//phase 2: 
+    			//Mengisi array solusi sesuai dengan jenis solusi setiap variabelnya
     			cr2 = brsNotZero-1;
     			cc2 = 0;
     			for (int i=cr2;i>=0;i--) {
@@ -1036,15 +1075,18 @@ public class Matriks {
     					solutionDeclared[cc2]=true;
     					solution[cc2][this.NKolEff-brsNotZero+2] = this.Elmt[i][this.getLastIdxKol()];
     					for (int k=this.getLastIdxKol()-1;k>=cc2+1;k--) {
+    						//Jenis solusi 1: bukan merupakan variabel parametrik ataupun solusi tunggal
     						if(solution[k][this.NKolEff-brsNotZero-1]==0 && solution[k][this.NKolEff-brsNotZero]==0) {
     							for (int j=0;j<=cpar-1;j++) {
     								solution[cc2][j] += solution[k][j]*-(this.Elmt[i][k]);
     							}
     							solution[cc2][this.NKolEff-brsNotZero+2] += solution[k][this.NKolEff-brsNotZero+2]*-(this.Elmt[i][k]);
         					}
+    						//Jenis solusi 2: Merupakan variabel parametrik
     						else if (solution[k][this.NKolEff-brsNotZero-1]==1 && solution[k][this.NKolEff-brsNotZero]==0) {
     							solution[cc2][(int)solution[k][this.NKolEff-brsNotZero+1]] += this.Elmt[i][k];
     						}
+    						//Jenis solusi 3: Memiliki solusi tunggal
     						else {
     							solution[cc2][this.NKolEff-brsNotZero+2] -= solution[k][this.NKolEff-brsNotZero+2]*this.Elmt[i][k];	
     							
@@ -1056,10 +1098,11 @@ public class Matriks {
     				
     			}
     			
+    			//Menuliskan hasil
     			String[] variables = {"r","s","t","u","v","w","x","y","z"}; 
     			String printMode = this.TulisSPLGauss();   
     			
-    			
+    			//Tulis hasil ke file
     			if (printMode.equals("2")) {
     				Scanner scan = new Scanner(System.in);
     		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
@@ -1129,6 +1172,7 @@ public class Matriks {
     		        
     			}
     			
+    			//Tulis hasil ke layar
     			System.out.println("SPL ini memiliki solusi banyak, yang mengikuti:");
     			for (int i = this.IdxBrsMin; i <= this.getLastIdxKol()-1; i++) {
     				if(solution[i][this.NKolEff-brsNotZero-1]==0 && solution[i][this.NKolEff-brsNotZero]==0) {
@@ -1167,10 +1211,11 @@ public class Matriks {
     			    			
     			
     		} 
-    		//KASUS 3: UNIQUE SOLUTION
+    		//Kasus 3: Solusi unik
     		else {
     			String printMode = this.TulisSPLGauss();    			
     			
+    			//Menyimpan solusi masing-masing variabel pada sebuah array
     	        double[] solution = new double[this.NKolEff];
     	        for (int i = this.getLastIdxKol()-1; i >= 0;i--) {
     	            double sum = 0.0;
@@ -1179,6 +1224,7 @@ public class Matriks {
     	            solution[i] = (this.Elmt[i][this.getLastIdxKol()] - sum);
     	        }     
     	        
+    	        //Tulis hasil ke file
     	        if (printMode.equals("2")) {
     				Scanner scan = new Scanner(System.in);
     		        System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
@@ -1198,6 +1244,7 @@ public class Matriks {
     		        }
     			}
     	        
+    	        //Tulis hasil ke layar
     	        System.out.println("SPL ini memiliki solusi unik, yaitu:");
     	        for (int i=0; i<=this.getLastIdxKol()-1;i++) {
     				System.out.print("x"+(i+1)+" = "+ df.format(solution[i])+"\n");
@@ -1360,13 +1407,13 @@ public class Matriks {
 	
 	}
 
-    //Determinan OBE
+    //DETERMINAN OBE
     public double DeterminanOBE() {
-		int tukarBaris = 0;
+		int tukarBaris = 0; //Variabel untuk menghitung jumlah pertukaran baris yang terjadi
 		double hasil = 1;
 		
 		for (int k = 0; k < this.NBrsEff; k++) {
-			//cari baris dengan this.matrix[i][k] paling besar
+			//Mencari baris dengan this.Elmn[i][k] paling besar untuk dipindahkan ke paling atas
 			int currentP = k;
 			for (int i = k + 1;i < this.NBrsEff; i++) {
 				if (Math.abs(this.Elmt[i][k]) > Math.abs(this.Elmt[currentP][k])) {
@@ -1374,16 +1421,17 @@ public class Matriks {
 				}
 			}
 			
+			//Menukar baris sehingga baris dengan this.Elmt[i][k] terbesar dari i akan menjadi berada pada posisi i
 			if (currentP != k) {
-				tukarBaris++;
-				//tukar baris  --> nanti ganti sama fungsi swap aja
+				tukarBaris++; //Increment tukarBaris
 				TukarBrs(k, currentP);
 			}
-			cleanMatriks(this, 1e-9);
 			
-			//0in nilai di bawah 1 utama currentP
+			cleanMatriks(this, 1e-9); //Membersihkan matriks
+			
+			//Menjadikan 0 semua elemen di bawah 1 utama currentP
 			for (int i = k + 1; i < this.NBrsEff; i++) {
-				double x = -(this.Elmt[i][k]/this.Elmt[k][k]);
+				double x = -(this.Elmt[i][k]/this.Elmt[k][k]); //Faktor pengali
 				for (int j = k; j < this.NKolEff; j++) {
 					this.Elmt[i][j] += this.Elmt[k][j] * x;
 				}
@@ -1395,12 +1443,12 @@ public class Matriks {
 		for (int i=0; i<this.NBrsEff; i++) {
 			hasil *= GetElmtDiagonal(i);
 		}
-		hasil *= Math.pow(-1, tukarBaris);
+		hasil *= Math.pow(-1, tukarBaris); //Mengalikan hasil dengan -1 dipangkatkan jumlah pertukaran baris
 		return hasil;
 		
 	}
 
-    //Determinan Kofaktor
+    //DETERMINAN KOFAKTOR
     public double DeterminanDenganKofaktor() {
 		// Diasumsikan matriks persegi
 		int n = this.NBrsEff;
