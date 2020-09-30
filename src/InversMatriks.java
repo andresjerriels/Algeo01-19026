@@ -43,25 +43,9 @@ public class InversMatriks {
     }
 
     public boolean IsInversible() {
-        // int KolAwal = this.matriks.NKolEff / 2;
-        // int x = 0, i = 0, j = 0;
         boolean inversible = false;
         if ((this.matriks.NKolEff == this.matriks.NBrsEff) && (this.matriks.DeterminanDenganKofaktor() != 0)) {
             inversible = true;
-            /*
-            while ((i <= this.matriks.getLastIdxBrs()) && inversible) {
-                while ((j < KolAwal) && inversible) {
-                    if (j == x) {
-                        inversible = this.matriks.Elmt[i][j] == 1;
-                    } else {
-                        inversible = this.matriks.Elmt[i][j] == 0;
-                    }
-                    j++;
-                }
-                i++;
-                x++;
-            }
-             */
         }
         return inversible;
     }
@@ -139,8 +123,10 @@ public class InversMatriks {
         }
 
         if (pilihan.equals("1")) {
+            System.out.println("Invers dari matriks di atas adalah ");
             this.matriks.TulisMatriks();
         } else {
+            System.out.println("Invers dari matriks di atas adalah ");
             this.matriks.TulisMatriksKeFile();
         }
     }
