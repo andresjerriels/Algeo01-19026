@@ -882,8 +882,8 @@ public class Matriks {
     		else {
     			String printMode = this.TulisSPLGauss();    			
     			
-    	        double[] solution = new double[this.NBrsEff];
-    	        for (int i = this.getLastIdxBrs(); i >= 0;i--) {
+    	        double[] solution = new double[this.NKolEff];
+    	        for (int i = this.getLastIdxKol()-1; i >= 0;i--) {
     	            double sum = 0.0;
     	            for (int j = i + 1; j < this.getLastIdxKol(); j++) 
     	                sum += this.Elmt[i][j] * solution[j];
@@ -901,7 +901,7 @@ public class Matriks {
     		            String s =("SPL ini memiliki solusi unik, yaitu:\n");
     		            b = s.getBytes();
 		                file.write(b);
-    		            for (int i=0; i<=this.getLastIdxBrs();i++) {
+    		            for (int i=0; i<=this.getLastIdxKol()-1;i++) {
     		                s = ("x"+(i+1)+" = "+ df.format(solution[i])+"\n");
     		                b = s.getBytes();
     		                file.write(b);
@@ -910,7 +910,7 @@ public class Matriks {
     			}
     	        
     	        System.out.println("SPL ini memiliki solusi unik, yaitu:");
-    	        for (int i=0; i<=this.getLastIdxBrs();i++) {
+    	        for (int i=0; i<=this.getLastIdxKol()-1;i++) {
     				System.out.print("x"+(i+1)+" = "+ df.format(solution[i])+"\n");
     			}
     		}
@@ -1162,8 +1162,8 @@ public class Matriks {
     		else {
     			String printMode = this.TulisSPLGauss();    			
     			
-    	        double[] solution = new double[this.NBrsEff];
-    	        for (int i = this.getLastIdxBrs(); i >= 0;i--) {
+    	        double[] solution = new double[this.NKolEff];
+    	        for (int i = this.getLastIdxKol()-1; i >= 0;i--) {
     	            double sum = 0.0;
     	            for (int j = i + 1; j < this.getLastIdxKol(); j++) 
     	                sum += this.Elmt[i][j] * solution[j];
@@ -1181,7 +1181,7 @@ public class Matriks {
     		            String s =("SPL ini memiliki solusi unik, yaitu:\n");
     		            b = s.getBytes();
 		                file.write(b);
-    		            for (int i=0; i<=this.getLastIdxBrs();i++) {
+    		            for (int i=0; i<=this.getLastIdxKol()-1;i++) {
     		                s = ("x"+(i+1)+" = "+ df.format(solution[i])+"\n");
     		                b = s.getBytes();
     		                file.write(b);
@@ -1190,7 +1190,7 @@ public class Matriks {
     			}
     	        
     	        System.out.println("SPL ini memiliki solusi unik, yaitu:");
-    	        for (int i=0; i<=this.getLastIdxBrs();i++) {
+    	        for (int i=0; i<=this.getLastIdxKol()-1;i++) {
     				System.out.print("x"+(i+1)+" = "+ df.format(solution[i])+"\n");
     			}
     		}
@@ -1326,7 +1326,7 @@ public class Matriks {
     //Determinan OBE
     public double DeterminanOBE() {
 		int tukarBaris = 0;
-		int hasil = 1;
+		double hasil = 1;
 		
 		for (int k = 0; k < this.NBrsEff; k++) {
 			//cari baris dengan this.matrix[i][k] paling besar
@@ -1342,7 +1342,7 @@ public class Matriks {
 				//tukar baris  --> nanti ganti sama fungsi swap aja
 				TukarBrs(k, currentP);
 			}
-			
+			cleanMatriks(this, 1e-9);
 			
 			//0in nilai di bawah 1 utama currentP
 			for (int i = k + 1; i < this.NBrsEff; i++) {
