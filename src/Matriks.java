@@ -160,8 +160,10 @@ public class Matriks {
 
 	//TukarKolCramer
 	public void TukarKolCramer(int IdxKol1, int IdxKol2, Matriks mx){
+		//procedure ini digunakan untuk menukar kolom dengan index IdxKol1 dengan kolom dengan IdxKol2
 		double tmp;
 		for (int i = this.IdxBrsMin; i <= this.getLastIdxBrs();i++){
+			//Menukar elmt[i][IdxKol1] dengan elmt[i][IdxKol2]
             tmp = mx.Elmt[i][IdxKol1];
             mx.Elmt[i][IdxKol1] = this.Elmt[i][IdxKol2];
             this.Elmt[i][IdxKol2] = tmp;
@@ -572,33 +574,40 @@ public class Matriks {
 	//Untuk Multiple Linear Regression
 	//Jumlah Perkalian 2 Kolom
 	public double SumMul2BrsMLR(int IdxKol1, int IdxKol2){
+		// fungsi ini digunakan untuk menghasilkan jumlah dari perkalian setiap elemen pada kolom ke IdxKol1 dengan kolom ke IdxKol2
+		// Untuk merealisasikan Normal Estimation Equation for Multiple Linear Regression
 		double sum = 0;
 		int n = this.NBrsEff;
 		int k = this.NKolEff;
 		if(IdxKol1==0 && IdxKol2==0){
+			// untuk Elmt[0][0]
 			sum = n;
 		} else if(IdxKol2 == k){
 			if(IdxKol1==0){
+				// Kasus untuk Elmt[0][k] pada SPL
 				for(int i=0; i<n ;i++){
 					sum += this.Elmt[i][0];
 				}
 			} else{
+				// Kasus Untuk kolom ke K selain Elmt[0][k] 
 				for(int i=0; i<n ;i++){
 					sum += this.Elmt[i][IdxKol1]*this.Elmt[i][0];
 				}
 			}
 		} else if(IdxKol1==0 || IdxKol2==0){
 			if(IdxKol1==0){
+				// Kasus Untuk Kolom pertama 
 				for(int i=0; i<n; i++){
 					sum += this.Elmt[i][IdxKol2];
 				}
 			} else{
-				//IdxKol2==0
+				// Kasus untuk baris pertama selain selain Elmt[0][0] dan Elmt[0][k]
 				for(int i=0; i<n; i++){
 					sum+= this.Elmt[i][IdxKol1];
 				}
 			}
 		} else{
+			//Kasus Elmt ditengah
 			for(int i=0; i<n; i++){
 				sum+= this.Elmt[i][IdxKol1] * this.Elmt[i][IdxKol2];
 			}
@@ -1202,24 +1211,34 @@ public class Matriks {
 	//SPL CRAMER
 	//SPL CRAMER Dapat mengembalikan array dari detMinor/detUtama untuk digunakan dalam Multiple Linear Regression
 	public double[] SPLCramer(boolean isMLR) {
+		// Diasumsikan SPL yang diterima hanya SPL dengan n peubah dan n persamaan
 		DecimalFormat df = new DecimalFormat("#.##");
 		int n = this.NBrsEff;
+
+		// Menmbuat Matriks Utama yang berisi koefisien peubah pada n persamaan
 		Matriks utama = new Matriks(n, n);
 		for(int i=0; i<n; i++){
 			for(int j=0; j<n; j++){
 				utama.Elmt[i][j] = this.Elmt[i][j];
 			}
 		}
+		//Menghitung determinan matriks utama
 		double detUtama = utama.DeterminanDenganKofaktor();
+		
+		//Menghitung determinan tiap matriks minor (yang kolomnya sudah ditukar)
 		double[] detMinor = new double[n];
 		for(int i=0; i<n; i++){
+			// Menukar Kolom i dengan Kolom terakhir pada matriks utama
 			this.TukarKolCramer(i, this.getLastIdxKol(), utama);
 			detMinor[i] = utama.DeterminanDenganKofaktor();
+			// Mengembalikan kolom i ke kolom terakhir pada matriks utama
 			this.TukarKolCramer(i, this.getLastIdxKol(), utama);
 		}
+
 		if(!isMLR){
 			// Untuk SPL Biasa
 			try {
+				// Menulis Hasil SPL dengan Kaidah Cramer
 				TulisSPLCramer(detUtama, detMinor);
 			}catch (IOException e) {
 				// Do Nothing
@@ -1232,6 +1251,7 @@ public class Matriks {
 		for(int i=0; i<n; i++){
 			solusi[i] = detMinor[i]/detUtama;
 		}
+
 		return solusi;
 	}
 	
@@ -1249,15 +1269,20 @@ public class Matriks {
 		System.out.println ("#=============================================================================================#");
 		System.out.println ("# Ketik '1' atau '2' pada keyboard:                                                           #");
 
+		// Menerima pilihan user untuk penulisan solusi
 		int pilihan = scan.nextInt();
 		while (pilihan<1 || pilihan>2){
 			System.out.println("Masukan Anda salah. Silakan ulangi kembali.");
 			pilihan = scan.nextInt();
 		}
+
+		// Menampilkan hasil SPL ke layar
 		if (pilihan==1) {
 			if(detUtama==0){
+				// Jika determinan utama = 0, maka solusi SPL antara tidak memiliki solusi atau memiliki banyak solusi
 				boolean isAllDetZero = true;
 				int i=0;
+				// Pengecekan determinan matriks minor untuk tiap peubah
 				while(i<n && isAllDetZero){
 					if(detMinor[i]!=0){
 						isAllDetZero = false;
@@ -1265,14 +1290,19 @@ public class Matriks {
 						i+=1;
 					}
 				}
+
 				if(isAllDetZero){
+					// Jika semua determinan matriks minor = 0
 					System.out.println("Solusi SPL tidak dapat dicari dengan metode cramer, karena SPL ini memiliki banyak solusi.");
 				} else{
+					// Jika ada determinan matriks minor != 0
 					System.out.println("SPL ini tidak memiliki solusi.");
 				}
 			} else{
+				// Jika determinan utama != 0
 				System.out.println("SPL ini memiliki solusi unik, yaitu:");
 				for (int i=0; i<n;i++) {
+					//Menampilkan hasil bagi antara determinan minor dengan determinan utama sebagai solusi SPl untuk tiap variabel peubah
 					System.out.print("x"+(i+1)+" = "+ df.format(detMinor[i]/detUtama)+"\n");
 				}
 			}
@@ -1286,8 +1316,10 @@ public class Matriks {
 			try (FileOutputStream file = new FileOutputStream(namafile)) {
 				byte[] b;
 				if(detUtama==0){
+					// Jika determinan utama = 0, maka solusi SPL antara tidak memiliki solusi atau memiliki banyak solusi
 					boolean isAllDetZero = true;
 					int i=0;
+					// Pengecekan determinan matriks minor untuk tiap peubah				
 					while(i<n && isAllDetZero){
 						if(detMinor[i]!=0){
 							isAllDetZero = false;
@@ -1296,12 +1328,14 @@ public class Matriks {
 						}
 					}
 					if(isAllDetZero){
+						// Jika semua determinan matriks minor = 0
 						String s = "Solusi SPL tidak dapat dicari dengan metode cramer, karena SPL ini memiliki banyak solusi.\n";
 						System.out.print(s);
 						b = s.getBytes();
 						file.write(b);
 						System.out.println("Hasil perhitungan SPL dengan kaidah cramer berhasil disimpan kedalam file");
 					} else{
+						// Jika ada determinan matriks minor != 0
 						String s = "SPL ini tidak memiliki solusi.\n";
 						System.out.print(s);
 						b = s.getBytes();
@@ -1309,8 +1343,11 @@ public class Matriks {
 						System.out.println("Hasil perhitungan SPL dengan kaidah cramer berhasil disimpan kedalam file");
 					}
 				} else{
+					// Jika determinan utama != 0
 					System.out.println("SPL ini memiliki solusi unik, yaitu:");
 					for (int i = 0; i <n; i++) {
+						//Menampilkan hasil bagi antara determinan minor dengan determinan utama sebagai solusi SPl untuk tiap variabel peubah
+						// Menyimpan solusi SPL kedalam file
 						String s = ("x" + (i + 1) + " = " + df.format(detMinor[i]/detUtama) + "\n");
 						System.out.print(s);
 						b = s.getBytes();
@@ -1365,18 +1402,30 @@ public class Matriks {
 
     //Determinan Kofaktor
     public double DeterminanDenganKofaktor() {
+		// Diasumsikan matriks persegi
 		int n = this.NBrsEff;
+
 		if (n<=0) {
+			// Basis
+			// Jika ukuran matriks tidak terdefinisi
 			return 0;
 		} else if (n==1){
+			// Basis
+			// Jika matriks memiliki ukuran 1x1
 			return this.Elmt[0][0];
 		} else if (n==2){
+			// Basis
+			// Jika matriks memiliki ukuran 2x2
 			return (this.Elmt[0][0] * this.Elmt[1][1]) - (this.Elmt[1][0]*this.Elmt[0][1]);
 		} else{
+			// Rekurens
+			// Jika matriks memiliki ukuran >= 3x3
 			Matriks minor = new Matriks((n-1),(n-1));	//inisialisasi matriks minor
 			int i, aj, bj, k;	//indeks yang akan digunakan
 			int sign = 1;
 			double det = 0;
+
+			//Lakukan perhitungan matriks kofaktor
 			for(k=0; k<n ; k++){
 				for (i=1 ; i<n ; i++){
 					bj = 0;
@@ -1388,9 +1437,11 @@ public class Matriks {
 					}
 				}
 				det = det + (sign*this.Elmt[0][k]*minor.DeterminanDenganKofaktor());
+				// Merubah Nilai sign menjadi -sign
 				sign = -1*sign;
 			}
 			return det;
+			//Referensi : https://stackoverflow.com/questions/42802208/code-for-determinant-of-n-x-n-matrix
 		}
 	}
 
@@ -1431,17 +1482,19 @@ public class Matriks {
         System.out.println ("#=============================================================================================#");
         System.out.println ("# Ketik '1' atau '2' pada keyboard:                                                           #");
 
+		// Menerima masukkan user untuk pilihan penulisan solusi regresi linier berganda
         int pilihan = scan.nextInt();
         while (pilihan<1 || pilihan>2){
             System.out.println("Masukan Anda salah. Silakan ulangi kembali.");
             pilihan = scan.nextInt();
 		}
+
 		if(pilihan ==1 ){
 			//Print persamaan
 			DecimalFormat eq = new DecimalFormat("#.#####");
 			System.out.println("\nBerikut adalah persamaan yang didapatkan dengan Regresi Linear Berganda:");
 			String equation = "y = ";
-			
+		
 			for(int i=0; i<n; i++){
 				if(i==0){
 					equation += eq.format(koef[i]);
@@ -1506,13 +1559,10 @@ public class Matriks {
 				String final3 =final1+equation+final2;
                 System.out.print(final3);
                 b = final3.getBytes();
-				file.write(b);
-				
+				file.write(b);				
                 System.out.println("Persamaan Regresi dan Taksiran Nilai Fungsi berhasil disimpan kedalam file");
             }
-			
 		}
-		
 	}  
 
 }
