@@ -234,8 +234,8 @@ public class TubesAlgeo {
     	
                     Mtemp.toMatriks(A);
                     InversMatriks InversA = new InversMatriks(A);
-                    InversA.OBEMatriksInvers();
                     if (InversA.IsInversible()){
+                        InversA.OBEMatriksInvers();
                         InversA.hasilInversOBE();
                         InversA.TulisMatriksInvers();
                     } else {
@@ -248,7 +248,7 @@ public class TubesAlgeo {
     	
                     Mtemp.toMatriks(A);
                     InversMatriks InversA = new InversMatriks(A);
-                    if (InversA.matriks.DeterminanDenganKofaktor() == 0){
+                    if (!InversA.IsInversible()){
                         System.out.println("Matriks tidak memiliki balikan.");
                     } else {
                         InversA.hasilInversKofaktor();
