@@ -135,13 +135,15 @@ public class TubesAlgeo {
 
 
     public static void main(String [] args) throws IOException {
-        
+        //START
         TulisMenuWelcome();
         Scanner scan = new Scanner(System.in);
         char status = scan.next().charAt(0);
         while(status == 'Y'){
+            // Selama status = Y maka program akan berjalan
             TulisMenuUtama();
-        	scan = new Scanner(System.in);
+            // Menerima masukkan user untuk pilihan operasi yang ingin dilakukan
+            scan = new Scanner(System.in);
             int operasi = scan.nextInt();
             while(operasi<1 || operasi>6){
                 MasukanMenuUtamaSalah();
@@ -150,6 +152,7 @@ public class TubesAlgeo {
             if(operasi==1){
                 // SPL
                 TulisMenuPenyelesaian();
+                // Menerima masukkan user untuk pilihan metode untuk menyelesaikan SPL
                 int metode = scan.nextInt();
                 while(metode<1 || metode>5){
                     MasukanMetodeSalah();
@@ -191,6 +194,7 @@ public class TubesAlgeo {
             } else if(operasi==2){
                 // Determinan
                 TulisMenuDeterminan();
+                // Menerima masukkan user untuk pilihan metode untuk mengitung determinan sebuah matriks
                 int metode = scan.nextInt();
                 while(metode<1 || metode>3){
                     MasukanMetodeDeterminanSalah();
@@ -217,6 +221,7 @@ public class TubesAlgeo {
             } else if(operasi==3){
                 //Matriks Balikan
                 TulisMenuInvers();
+                // Menerima masukkan user untuk pilihan metode untuk membuat matriks balikan dari sebuah matriks
                 int metode = scan.nextInt();
                 while(metode<1 || metode>3){
                     MasukanMetodeInversSalah();
@@ -252,6 +257,7 @@ public class TubesAlgeo {
 
                 }
             } else if (operasi == 4) {
+                // Interpolasi Polinom
                 MatriksInit Mtemp = new MatriksInit(4);
                 Matriks A = new Matriks(Mtemp.NBrsEff, Mtemp.NKolEff);
 
