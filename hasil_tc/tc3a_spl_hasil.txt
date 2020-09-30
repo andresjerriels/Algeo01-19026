@@ -1,5 +1,7 @@
- SPL ini memiliki solusi unik, yaitu:
+SPL ini memiliki solusi unik, yaitu:
 x1 = -0.22
 x2 = 0.18
 x3 = 0.71
 x4 = -0.26
+
+
