@@ -123,8 +123,10 @@ public class InversMatriks {
         }
 
         if (pilihan.equals("1")) {
+            System.out.println("Invers dari matriks di atas adalah ");
             this.matriks.TulisMatriks();
         } else {
+            System.out.println("Invers dari matriks di atas adalah ");
             this.matriks.TulisMatriksKeFile();
         }
     }
