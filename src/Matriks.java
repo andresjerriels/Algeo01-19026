@@ -32,12 +32,12 @@ public class Matriks {
     }
 
     //=====================PRIMITIF=========================
-    //GetLaskIdxBrs
+    //GetLastIdxBrs
     public int getLastIdxBrs() {
         return this.NBrsEff - 1;
     }
 
-    //GetLaskIdxKol
+    //GetLastIdxKol
     public int getLastIdxKol() {
         return this.NKolEff - 1;
     }
@@ -268,6 +268,9 @@ public class Matriks {
 
 	// UNTUK INTERPOLASI
 	void MakeMatriksInterpolasi(int NBrs) {
+    	/* I.S. Matriks NBrs x 2 terdefinisi dari masukan pengguna
+    	   F.S. Mengubah Matriks menjadi matriks yang siap diinterpolasi */
+
 		this.NBrsEff = NBrs;
 		this.NKolEff = NBrs + 1;
 
@@ -284,26 +287,19 @@ public class Matriks {
 		}
 	}
 
-	public void BacaMatriksInterpolasi() {
-		Scanner scan = new Scanner(System.in);
-		System.out.println("Masukkan jumlah baris: ");
-		int NB = scan.nextInt();
-		this.MakeEmpty(NB, 2);
-		for (int i=this.IdxBrsMin; i <= this.getLastIdxBrs(); i++){
-			for (int j=this.IdxKolMin; j <= this.getLastIdxKol(); j++){
-				this.Elmt[i][j] = scan.nextDouble();
-			}
-		}
-		this.MakeMatriksInterpolasi(NB);
-	}
-
 	public void SolusiInterpolasi() throws IOException {
+    	/* I.S. Matriks interpolasi terdefinisi
+    	   F.S. Menghitung interpolasi polinomial dan solusi yang dihasilkan akan ditampilkan ke layar atau disimpan
+    	   		ke dalam file .txt. Jika matriks tidak memiliki solusi interpolasi polinomial, akan ditampilkan
+    	   		“Polinom Interpolasi tidak dapat dihitung”. */
+
+		// Inisialisasi berbagai variabel yang dibutuhkan
 		Scanner scan = new Scanner(System.in);
 		int brsNotZero = 0;
 		int cr = this.getLastIdxBrs();
 		boolean hasSolution = true;
 
-		//PREPARATION
+		// Eliminasi Gauss-Jordan untuk mendapat matriks eselon baris tereduksi
 		this.EliminasiGaussJordan();
 		while (hasSolution && cr >= 0) {
 			int cc = 0;
@@ -326,6 +322,7 @@ public class Matriks {
 			cr--;
 		}
 
+		// Penulisan solusi ke layar atau disimpan ke file
 		System.out.println ("#=============================================================================================#");
 		System.out.println ("# PENULISAN SOLUSI INTERPOLASI                                                                #");
 		System.out.println ("#---------------------------------------------------------------------------------------------#");
@@ -350,19 +347,26 @@ public class Matriks {
 	}
 
 	public void TulisInterpolasi(boolean hasSolution, int brsNotZero) {
+    	/* I.S. Matriks terdefinisi dalam bentuk matriks eselon baris tereduksi
+    	   F.S. Menampilkan hasil interpolasi ke layar */
+
+		// Format penulisan desimal
 		DecimalFormat df = new DecimalFormat("#.######");
-		//KASUS 1: HAS NO SOLUTION
+
+		// KASUS 1: SPL tidak memiliki solusi
 		if (!hasSolution) {
 			System.out.println("Polinom Interpolasi tidak dapat dihitung");
 		} else {
-			//KASUS 2: INFINITELY MANY SOLUTIONS
+			// KASUS 2: SPL memiliki solusi banyak
 			if (brsNotZero < this.NKolEff - 1) {
 				System.out.println("Polinom Interpolasi tidak dapat dihitung");
 			}
-			//KASUS 3: UNIQUE SOLUTION
+			//KASUS 3: Solusi unik
 			else {
 				System.out.println("Hasil polinom interpolasinya adalah");
 				System.out.print("P(x) = ");
+
+				// Perulangan untuk mencetak hasil interpolasi
 				for (int i = 0; i <= this.getLastIdxBrs(); i++) {
 					if (i == 0) {
 						if (this.Elmt[i][this.getLastIdxKol()] > 1e-9) {
@@ -403,6 +407,8 @@ public class Matriks {
 				System.out.println();
 			}
 		}
+
+		// Menghitung taksiran
 		Scanner scan = new Scanner(System.in);
 		double x = 0;
 		do{
@@ -416,12 +422,20 @@ public class Matriks {
 	}
 
 	public void TulisInterpolasiKeFile(boolean hasSolution, int brsNotZero) throws IOException {
+    	/* I.S. Matriks terdefinisi dalam bentuk matriks eselon baris tereduksi
+    	   F.S. Menyimpan hasil interpolasi ke dalam file dan juga menampilkannya di layar */
+
 		Scanner scan = new Scanner(System.in);
+
+		// Menerima masukan nama file dari pengguna
 		System.out.println("Masukkan nama File solusi beserta direktori dengan format nama_folder/nama_file.txt: ");
 		System.out.println("Contoh: solutions/SolusiSPL.txt");
 		String namafile = "../"+scan.nextLine();
+
+		// Format penulisan desimal
 		DecimalFormat df = new DecimalFormat("#.######");
 
+		// Penulisan solusi ke dalam file
 		try (FileOutputStream file = new FileOutputStream(namafile)) {
 			byte[] b;
 			//KASUS 1: HAS NO SOLUTION
@@ -512,6 +526,7 @@ public class Matriks {
 				}
 			}
 
+			// Menghitung taksiran dan menyimpan hasilnya ke dalam file
 			double x = 0;
 			do {
 				System.out.println("Masukkan nilai x yang ingin ditaksir (Jika ingin kembali ke menu utama, masukkan -999):");
@@ -528,6 +543,9 @@ public class Matriks {
 	}
 
 	public double Taksiran(double x){
+    	/* I.S. Hasil interpolasi polinom terdefinisi dalam sebuah matriks
+    	   F.S. Mengembalikan hasil substitusi nilai x ke dalam polinom */
+
 		double result = 0;
 		for (int i = 0; i <= this.getLastIdxBrs(); i++) {
 			result += Math.pow(x, i) * this.Elmt[i][this.getLastIdxKol()];
