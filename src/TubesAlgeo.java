@@ -34,7 +34,7 @@ public class TubesAlgeo {
 
     public static void MasukanMenuUtamaSalah(){
         System.out.println ("# Masukkan tidak valid!                                                                       #");
-        System.out.println ("# Ketik '1', '2', '3', atau '4' pada keyboard:                                                #");
+        System.out.println ("# Ketik '1', '2', '3', '4', '5', atau '6' pada keyboard:                                      #");
     }
 
     public static void TulisMenuPenyelesaian () {
@@ -54,7 +54,7 @@ public class TubesAlgeo {
 
     public static void MasukanMetodeSalah(){
         System.out.println ("# Masukkan tidak valid!                                                                       #");
-        System.out.println ("# Ketik '1', '2', '3', '4', '5' pada keyboard:                                                #");
+        System.out.println ("# Ketik '1', '2', '3', '4', atau '5' pada keyboard:                                           #");
     }
 
     public static void TulisMenuDeterminan () {
@@ -72,7 +72,7 @@ public class TubesAlgeo {
 
     public static void MasukanMetodeDeterminanSalah(){
         System.out.println ("# Masukkan tidak valid!                                                                       #");
-        System.out.println ("# Ketik '1', '2', '3', '4', '5' pada keyboard:                                                #");
+        System.out.println ("# Ketik '1', '2', atau '3' pada keyboard:                                                     #");
     }
 
     public static void TulisMenuInvers() {
@@ -90,7 +90,7 @@ public class TubesAlgeo {
 
     public static void MasukanMetodeInversSalah(){
         System.out.println ("# Masukkan tidak valid!                                                                       #");
-        System.out.println ("# Ketik '1', '2', '3', '4', '5' pada keyboard:                                                #");
+        System.out.println ("# Ketik '1', '2', atau '3' pada keyboard:                                                     #");
     }
 
     public static void TulisSolusiDet(double det) throws IOException {
