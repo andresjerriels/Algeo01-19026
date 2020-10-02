@@ -1,6 +1,0 @@
-SPL ini memiliki solusi banyak, yang mengikuti:
-x1 = -1+s
-x2 = 2r
-x3 = r
-x4 = s
-

@@ -1,9 +1,0 @@
-SPL ini memiliki solusi banyak, yang mengikuti:
-x1 = r
-x2 = 1-t
-x3 = s
-x4 = -2-t
-x5 = 1+t
-x6 = t
-
-
