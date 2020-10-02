@@ -31,7 +31,7 @@ Silakan mengikuti format input seperti yang dituliskan pada layar setelah memili
 ### 3. MATRIKS BALIKAN
 ![Menu Matriks Balikan](Documentation/menu-invers-display.png)
 Silakan mengikuti format input seperti yang dituliskan pada layar setelah memilih metode masukan.
-> Operasi determinan hanya menerima masukan matriks bujur sangkar (matriks dengan ukuran n x n).
+> Operasi matriks balikan hanya menerima masukan matriks bujur sangkar (matriks dengan ukuran n x n).
 
 ### 4. INTERPOLASI POLINOM
 Silakan mengikuti format input seperti yang dituliskan pada layar setelah memilih metode masukan.
