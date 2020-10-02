@@ -136,7 +136,7 @@ public class MatriksInit {
 	}
 	
 	
-	//Inisiasi matriks dari keyboard versi 4 - SPL
+	//Inisiasi matriks dari keyboard versi 1 - SPL
 	public void matrixInitKeyboard() {
 		scan = new Scanner(System.in);
 		System.out.println("#=============================================================================================#");
@@ -148,7 +148,7 @@ public class MatriksInit {
 	    this.matrix = new double[NBrsEff][NKolEff];
 	}
 	
-	//Inisiasi matriks dari keyboard versi 4 - determinan, invers
+	//Inisiasi matriks dari keyboard versi 2 - determinan, invers
 	public void matrixInitKeyboard2() {
 		scan = new Scanner(System.in);
 		System.out.println("# Masukkan n:                                                                                 #");
@@ -158,7 +158,7 @@ public class MatriksInit {
 	    this.matrix = new double[NBrsEff][NKolEff];
 	}
 	
-	//Inisiasi matriks dari keyboard versi 4 - interpolasi
+	//Inisiasi matriks dari keyboard versi 3 - interpolasi
 	public void matrixInitKeyboard3() {
 		scan = new Scanner(System.in);
 		System.out.println("# Masukkan n:                                                                                 #");
